@@ -1,0 +1,13 @@
+query getBlocks {
+  blocks(height: { max: 1000, min: 995 }) {
+    pageInfo {
+      hasNextPage
+    }
+    edges {
+      node {
+        id
+        height
+      }
+    }
+  }
+}

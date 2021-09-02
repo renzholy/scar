@@ -15,7 +15,6 @@
     "noEmit": true,
     "jsx": "preserve",
     "noFallthroughCasesInSwitch": true,
-    "importsNotUsedAsValues": "error",
     "baseUrl": "src"
   },
   "include": ["**/*", "next.config.js", "next-env.d.ts"],
