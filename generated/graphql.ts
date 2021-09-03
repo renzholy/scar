@@ -291,6 +291,7 @@ export type ListTransactionsQuery = {
         recipient: string
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
+        quantity: { __typename?: 'Amount'; winston: string; ar: string }
         tags: Array<{ __typename?: 'Tag'; name: string; value: string }>
         data: { __typename?: 'MetaData'; size: string; type?: Maybe<string> }
       }
@@ -332,6 +333,10 @@ export const ListTransactionsDocument = gql`
             key
           }
           fee {
+            winston
+            ar
+          }
+          quantity {
             winston
             ar
           }

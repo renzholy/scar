@@ -33,6 +33,10 @@ query listTransactions($after: String, $first: Int = 100) {
           winston
           ar
         }
+        quantity {
+          winston
+          ar
+        }
         tags {
           name
           value
