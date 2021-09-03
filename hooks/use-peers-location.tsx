@@ -1,12 +1,19 @@
 import useSWR from 'swr'
 import chunk from 'lodash/chunk'
 import uniqBy from 'lodash/uniqBy'
+import Arweave from 'arweave'
 
-export default function useIpApi(ips?: string[]) {
+const arweave = Arweave.init({})
+
+export default function usePeersLocation() {
   return useSWR<{ lat: number; lon: number }[]>(
-    ips ? ['ip-api', 'batch', ...ips] : null,
-    async () =>
-      uniqBy(
+    'usePeersLocation',
+    async () => {
+      const peers = await arweave.network.getPeers()
+      const ips = uniqBy(peers, (peer) => peer.split('.').slice(0, 3).join('.')).map(
+        (peer) => peer.split(':')[0],
+      )
+      return uniqBy(
         (
           await Promise.all(
             chunk(ips, 100).map((ipsChunk) =>
@@ -21,7 +28,8 @@ export default function useIpApi(ips?: string[]) {
           .flat()
           .filter(({ lat, lon }) => lat && lon),
         ({ lat, lon }) => `${lat}${lon}`,
-      ),
-    { revalidateOnFocus: false },
+      )
+    },
+    { refreshInterval: 30 * 1000, revalidateOnFocus: false },
   )
 }
