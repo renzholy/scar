@@ -1,12 +1,15 @@
-query getBlocks {
-  blocks(height: { max: 1000, min: 995 }) {
+query listBlocks($after: String) {
+  blocks(after: $after, first: 100) {
     pageInfo {
       hasNextPage
     }
     edges {
+      cursor
       node {
         id
+        timestamp
         height
+        previous
       }
     }
   }

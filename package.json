@@ -11,19 +11,24 @@
     "export": "next export",
     "format": "prettier --config .prettierrc.json --write .",
     "lint": "eslint .",
-    "gen": "graphql-codegen --config graphql.config.yaml"
+    "gen": "graphql-codegen --config graphql.config.yaml && prettier --config .prettierrc.json --write generated/*"
   },
   "dependencies": {
+    "@emotion/css": "^11.1.3",
     "arweave": "^1.10.16",
     "graphql": "^15.5.2",
     "graphql-request": "^3.5.0",
     "next": "^11.1.2",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "swr": "^1.0.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.1.1",
+    "@graphql-codegen/introspection": "^2.1.0",
+    "@graphql-codegen/typescript": "^2.1.2",
     "@graphql-codegen/typescript-graphql-request": "^4.1.2",
+    "@graphql-codegen/typescript-operations": "^2.1.2",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
@@ -39,9 +44,6 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2",
-    "typescript": "^4.4.2",
-    "@graphql-codegen/typescript-operations": "^2.1.2",
-    "@graphql-codegen/typescript": "^2.1.2",
-    "@graphql-codegen/introspection": "^2.1.0"
+    "typescript": "^4.4.2"
   }
 }
