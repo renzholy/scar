@@ -3,6 +3,8 @@ import useSWR from 'swr'
 import Arweave from 'arweave'
 import { useMemo } from 'react'
 import { Box, DataTable, Grid, Heading, Text, WorldMap } from 'grommet'
+import TimeAgo from 'timeago-react'
+import prettyBytes from 'pretty-bytes'
 import { getSdk } from '../generated/graphql'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
@@ -80,7 +82,17 @@ export default function Index() {
       <DataTable
         columns={[
           { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
-          { property: 'block_size', header: 'Block size', align: 'end' },
+          {
+            property: 'timestamp',
+            render: (block) => <TimeAgo datetime={block.timestamp * 1000} />,
+            header: 'Timestamp',
+          },
+          {
+            property: 'block_size',
+            render: (block) => prettyBytes(parseInt(block.block_size as unknown as string, 10)),
+            header: 'Block size',
+            align: 'end',
+          },
           { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
         ]}
         data={blocks}
