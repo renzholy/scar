@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request'
 import useSWR from 'swr'
 import Arweave from 'arweave'
 import { useMemo } from 'react'
-import { Box, Grid, Heading, Text, WorldMap } from 'grommet'
+import { Box, DataTable, Grid, Heading, Text, WorldMap } from 'grommet'
 import { getSdk } from '../generated/graphql'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
@@ -20,17 +20,21 @@ export default function Index() {
   const { data: info } = useSWR(['getInfo'], () => arweave.network.getInfo(), {
     refreshInterval: 2000,
   })
-  const { data: block } = useSWR(
-    info ? ['getBlock', info.current] : null,
-    () => arweave.blocks.get(info!.current),
-    { revalidateOnFocus: false },
+  const { data: blocks } = useSWR(
+    ['listBlocks'],
+    async () => {
+      const {
+        blocks: { edges },
+      } = await sdk.listBlocks({ first: 10 })
+      return Promise.all(edges.map(({ node }) => arweave.blocks.get(node.id)))
+    },
+    {
+      revalidateOnFocus: false,
+    },
   )
-  const { data: blocks } = useSWR(['listBlocks'], () => sdk.listBlocks(), {
-    revalidateOnFocus: false,
-  })
 
   return (
-    <Box pad="medium">
+    <Box pad="medium" width={{ max: '800px' }} margin="0 auto">
       <Grid
         rows={['1/4', '1/4', '1/4', '1/4']}
         columns={['3/4', '1/4']}
@@ -73,12 +77,14 @@ export default function Index() {
           </>
         ) : null}
       </Grid>
-      <pre>
-        <code>{JSON.stringify(block, null, 2)}</code>
-      </pre>
-      <pre>
-        <code>{JSON.stringify(blocks, null, 2)}</code>
-      </pre>
+      <DataTable
+        columns={[
+          { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
+          { property: 'block_size', header: 'Block size', align: 'end' },
+          { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
+        ]}
+        data={blocks}
+      />
     </Box>
   )
 }

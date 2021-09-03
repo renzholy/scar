@@ -1,5 +1,5 @@
-query listBlocks($after: String) {
-  blocks(after: $after, first: 100) {
+query listBlocks($after: String, $first: Int = 100) {
+  blocks(after: $after, first: $first) {
     pageInfo {
       hasNextPage
     }

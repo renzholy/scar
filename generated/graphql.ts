@@ -250,6 +250,7 @@ export type TransactionEdge = {
 
 export type ListBlocksQueryVariables = Exact<{
   after?: Maybe<Scalars['String']>
+  first?: Maybe<Scalars['Int']>
 }>
 
 export type ListBlocksQuery = {
@@ -272,8 +273,8 @@ export type ListBlocksQuery = {
 }
 
 export const ListBlocksDocument = gql`
-  query listBlocks($after: String) {
-    blocks(after: $after, first: 100) {
+  query listBlocks($after: String, $first: Int = 100) {
+    blocks(after: $after, first: $first) {
       pageInfo {
         hasNextPage
       }
