@@ -31,25 +31,26 @@ export default function Index() {
       return Promise.all(edges.map(({ node }) => arweave.blocks.get(node.id)))
     },
     {
+      refreshInterval: 2000,
       revalidateOnFocus: false,
     },
   )
 
   return (
-    <Box pad="medium" width={{ max: '800px' }} margin="0 auto">
+    <Box pad="medium" width={{ max: '940px' }} margin="0 auto">
       <Grid
-        rows={['1/4', '1/4', '1/4', '1/4']}
-        columns={['3/4', '1/4']}
+        rows={['1/2', '1/2']}
+        columns={['2/3', '16.66%', '16.66%']}
         fill="vertical"
         areas={[
-          { name: 'map', start: [0, 0], end: [0, 3] },
+          { name: 'map', start: [0, 0], end: [0, 1] },
           { name: 'peers', start: [1, 0], end: [1, 0] },
           { name: 'blocks', start: [1, 1], end: [1, 1] },
-          { name: 'queue', start: [1, 2], end: [1, 2] },
-          { name: 'latency', start: [1, 3], end: [1, 3] },
+          { name: 'queue', start: [2, 0], end: [2, 0] },
+          { name: 'latency', start: [2, 1], end: [2, 1] },
         ]}
       >
-        <WorldMap gridArea="map" places={places} alignSelf="center" />
+        <WorldMap gridArea="map" places={places} alignSelf="center" height="max-content" />
         {info ? (
           <>
             <Box gridArea="peers" align="end">
@@ -80,6 +81,7 @@ export default function Index() {
         ) : null}
       </Grid>
       <DataTable
+        primaryKey="indep_hash"
         columns={[
           { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
           {
@@ -89,13 +91,16 @@ export default function Index() {
           },
           {
             property: 'block_size',
-            render: (block) => prettyBytes(parseInt(block.block_size as unknown as string, 10)),
+            render: (block) =>
+              prettyBytes(parseInt(block.block_size as unknown as string, 10), { locale: true }),
             header: 'Block size',
             align: 'end',
           },
           { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
         ]}
         data={blocks}
+        onClickRow={console.log}
+        margin={{ top: 'medium' }}
       />
     </Box>
   )
