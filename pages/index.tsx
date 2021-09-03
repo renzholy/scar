@@ -8,14 +8,27 @@ const client = new GraphQLClient('https://arweave.net/graphql')
 const sdk = getSdk(client)
 
 export default function Index() {
-  const { data: blocks } = useSWR(['listBlocks'], () => sdk.listBlocks())
-  const blockId = blocks?.blocks.edges[0].node.id
-  const { data: block } = useSWR(blockId ? ['getBlock', blockId] : null, () =>
-    arweave.blocks.get(blockId!),
+  const { data: info } = useSWR(['getInfo'], () => arweave.network.getInfo(), {
+    refreshInterval: 2000,
+  })
+  const { data: block } = useSWR(
+    info ? ['getBlock', info.current] : null,
+    () => arweave.blocks.get(info!.current),
+    { revalidateOnFocus: false },
+  )
+  const { data: blocks } = useSWR(
+    info ? ['listBlocks', info.current] : null,
+    () => sdk.listBlocks({ after: info!.current }),
+    {
+      revalidateOnFocus: false,
+    },
   )
 
   return (
     <>
+      <pre>
+        <code>{JSON.stringify(info, null, 2)}</code>
+      </pre>
       <pre>
         <code>{JSON.stringify(block, null, 2)}</code>
       </pre>
