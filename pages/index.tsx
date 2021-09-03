@@ -16,13 +16,9 @@ export default function Index() {
     () => arweave.blocks.get(info!.current),
     { revalidateOnFocus: false },
   )
-  const { data: blocks } = useSWR(
-    info ? ['listBlocks', info.current] : null,
-    () => sdk.listBlocks({ after: info!.current }),
-    {
-      revalidateOnFocus: false,
-    },
-  )
+  const { data: blocks } = useSWR(['listBlocks'], () => sdk.listBlocks(), {
+    revalidateOnFocus: false,
+  })
 
   return (
     <>
