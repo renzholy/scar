@@ -6,10 +6,10 @@ import { createGlobalStyle } from 'styled-components'
 import Link from 'next/link'
 
 const GlobalStyle = createGlobalStyle`
-  body {
-    margin: 0;
-    background-color: black;
-  }
+body {
+  margin: 0;
+  background-color: black;
+}
 `
 
 function MyApp({ Component, pageProps }: AppProps) {
