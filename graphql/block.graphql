@@ -14,3 +14,34 @@ query listBlocks($after: String, $first: Int = 100) {
     }
   }
 }
+
+query listTransactions($after: String, $first: Int = 100) {
+  transactions(after: $after, first: $first) {
+    pageInfo {
+      hasNextPage
+    }
+    edges {
+      cursor
+      node {
+        id
+        recipient
+        owner {
+          address
+          key
+        }
+        fee {
+          winston
+          ar
+        }
+        tags {
+          name
+          value
+        }
+        data {
+          size
+          type
+        }
+      }
+    }
+  }
+}

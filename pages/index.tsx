@@ -14,7 +14,10 @@ const client = new GraphQLClient('https://arweave.net/graphql')
 const sdk = getSdk(client)
 
 export default function Index() {
-  const { data: locations } = usePeersLocation()
+  const { data: locations } = usePeersLocation({
+    refreshInterval: 30 * 1000,
+    revalidateOnFocus: false,
+  })
   const places = useMemo(
     () => locations?.map((place) => ({ location: [place.lat, place.lon], color: 'accent-1' })),
     [locations],
@@ -30,10 +33,17 @@ export default function Index() {
       } = await sdk.listBlocks({ first: 10 })
       return Promise.all(edges.map(({ node }) => arweave.blocks.get(node.id)))
     },
-    {
-      refreshInterval: 2000,
-      revalidateOnFocus: false,
+    { refreshInterval: 2000 },
+  )
+  const { data: transactions } = useSWR(
+    ['listTransactions'],
+    async () => {
+      const {
+        transactions: { edges },
+      } = await sdk.listTransactions({ first: 10 })
+      return edges.map(({ node }) => node)
     },
+    { refreshInterval: 2000 },
   )
 
   return (
@@ -80,6 +90,7 @@ export default function Index() {
           </>
         ) : null}
       </Grid>
+      <Heading level="3">Latest blocks</Heading>
       <DataTable
         primaryKey="indep_hash"
         columns={[
@@ -100,7 +111,38 @@ export default function Index() {
         ]}
         data={blocks}
         onClickRow={console.log}
-        margin={{ top: 'medium' }}
+      />
+      <Heading level="3">Latest transactions</Heading>
+      <DataTable
+        primaryKey="id"
+        columns={[
+          {
+            property: 'id',
+            render: (transaction) => <Text>{transaction.id}</Text>,
+            header: 'Hash',
+          },
+          { property: 'data.type', header: 'Type' },
+          {
+            property: 'data.size',
+            render: (transaction) =>
+              prettyBytes(parseInt(transaction.data.size, 10), { locale: true }),
+            align: 'end',
+            header: 'Size',
+          },
+          {
+            property: 'fee.ar',
+            render: (transaction) =>
+              formatNumber.format(
+                parseFloat(
+                  transaction.recipient ? transaction.quantity.winston : transaction.fee.winston,
+                ),
+              ),
+            align: 'end',
+            header: 'Fee',
+          },
+        ]}
+        data={transactions}
+        onClickRow={console.log}
       />
     </Box>
   )

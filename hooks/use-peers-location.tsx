@@ -2,10 +2,11 @@ import useSWR from 'swr'
 import chunk from 'lodash/chunk'
 import uniqBy from 'lodash/uniqBy'
 import Arweave from 'arweave'
+import { SWRConfiguration } from 'swr/dist/types'
 
 const arweave = Arweave.init({})
 
-export default function usePeersLocation() {
+export default function usePeersLocation(config?: SWRConfiguration) {
   return useSWR<{ lat: number; lon: number }[]>(
     'usePeersLocation',
     async () => {
@@ -30,6 +31,6 @@ export default function usePeersLocation() {
         ({ lat, lon }) => `${lat}${lon}`,
       )
     },
-    { refreshInterval: 30 * 1000, revalidateOnFocus: false },
+    config,
   )
 }

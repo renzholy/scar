@@ -272,6 +272,32 @@ export type ListBlocksQuery = {
   }
 }
 
+export type ListTransactionsQueryVariables = Exact<{
+  after?: Maybe<Scalars['String']>
+  first?: Maybe<Scalars['Int']>
+}>
+
+export type ListTransactionsQuery = {
+  __typename?: 'Query'
+  transactions: {
+    __typename?: 'TransactionConnection'
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean }
+    edges: Array<{
+      __typename?: 'TransactionEdge'
+      cursor: string
+      node: {
+        __typename?: 'Transaction'
+        id: string
+        recipient: string
+        owner: { __typename?: 'Owner'; address: string; key: string }
+        fee: { __typename?: 'Amount'; winston: string; ar: string }
+        tags: Array<{ __typename?: 'Tag'; name: string; value: string }>
+        data: { __typename?: 'MetaData'; size: string; type?: Maybe<string> }
+      }
+    }>
+  }
+}
+
 export const ListBlocksDocument = gql`
   query listBlocks($after: String, $first: Int = 100) {
     blocks(after: $after, first: $first) {
@@ -285,6 +311,38 @@ export const ListBlocksDocument = gql`
           timestamp
           height
           previous
+        }
+      }
+    }
+  }
+`
+export const ListTransactionsDocument = gql`
+  query listTransactions($after: String, $first: Int = 100) {
+    transactions(after: $after, first: $first) {
+      pageInfo {
+        hasNextPage
+      }
+      edges {
+        cursor
+        node {
+          id
+          recipient
+          owner {
+            address
+            key
+          }
+          fee {
+            winston
+            ar
+          }
+          tags {
+            name
+            value
+          }
+          data {
+            size
+            type
+          }
         }
       }
     }
@@ -311,6 +369,19 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'listBlocks',
+      )
+    },
+    listTransactions(
+      variables?: ListTransactionsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers'],
+    ): Promise<ListTransactionsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ListTransactionsQuery>(ListTransactionsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'listTransactions',
       )
     },
   }
