@@ -3,6 +3,7 @@ import { AppProps } from 'next/app'
 import { createGlobalStyle } from 'styled-components'
 import Link from 'next/link'
 import Head from 'next/head'
+import * as Icon from 'grommet-icons'
 
 const GlobalStyle = createGlobalStyle`
 ::-webkit-scrollbar {
@@ -29,13 +30,26 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <Grommet theme={grommet} themeMode="dark">
         <GlobalStyle />
-        <Nav direction="row" background="brand" pad="small" justify="center">
-          <Box width={{ max: '940px' }} pad={{ left: 'medium', right: 'medium' }} fill>
+        <Nav direction="row" background="dark-1" pad="small" justify="center">
+          <Box
+            width={{ max: '940px' }}
+            pad={{ left: 'medium', right: 'medium' }}
+            fill="horizontal"
+            direction="row"
+            justify="between"
+          >
             <Box width="min-content">
               <Link href="/" passHref={true}>
-                <Anchor>SCAR</Anchor>
+                <Anchor color="light-1">SCAR</Anchor>
               </Link>
             </Box>
+            <Anchor
+              href="https://github.com/renzholy/scar"
+              target="_blank"
+              style={{ lineHeight: 0 }}
+            >
+              <Icon.Github />
+            </Anchor>
           </Box>
         </Nav>
         <Component {...pageProps} />
