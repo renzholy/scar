@@ -47,7 +47,7 @@ export default function Index() {
   )
 
   return (
-    <Box pad="medium" width={{ max: '940px' }} margin="0 auto">
+    <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
       <Grid
         rows={['1/2', '1/2']}
         columns={['2/3', '16.66%', '16.66%']}
@@ -118,27 +118,41 @@ export default function Index() {
         columns={[
           {
             property: 'id',
-            render: (transaction) => <Text>{transaction.id}</Text>,
+            render: (transaction) => <Text truncate={true}>{transaction.id}</Text>,
             header: 'Hash',
           },
-          { property: 'data.type', header: 'Type' },
+          {
+            property: 'data.type',
+            header: 'Type',
+            render: (transaction) => (
+              <Text truncate={true}>
+                {transaction.recipient ? '[transfer]' : transaction.data.type || '-'}
+              </Text>
+            ),
+          },
           {
             property: 'data.size',
-            render: (transaction) =>
-              prettyBytes(parseInt(transaction.data.size, 10), { locale: true }),
+            render: (transaction) => (
+              <Text truncate={true}>
+                {transaction.recipient
+                  ? ''
+                  : prettyBytes(parseInt(transaction.data.size, 10), { locale: true })}
+              </Text>
+            ),
             align: 'end',
             header: 'Size',
           },
           {
             property: 'fee.ar',
-            render: (transaction) =>
-              formatNumber.format(
-                parseFloat(
-                  transaction.recipient ? transaction.quantity.winston : transaction.fee.winston,
-                ),
-              ),
+            render: (transaction) => (
+              <Text truncate={true}>
+                {transaction.recipient
+                  ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
+                  : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} W`}
+              </Text>
+            ),
             align: 'end',
-            header: 'Fee',
+            header: 'Fee/Quantity',
           },
         ]}
         data={transactions}
