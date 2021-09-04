@@ -23,9 +23,15 @@ export default function Transaction() {
   }
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
+      <Heading level="3" margin={{ top: '0px' }}>
+        Transaction
+      </Heading>
+      <Text>{transaction?.id || '-'}</Text>
       <Heading level="3">Block</Heading>
       <Link href={`/block/${status?.confirmed?.block_indep_hash}`} passHref={true}>
-        <Anchor>{status?.confirmed?.block_indep_hash || '-'}</Anchor>
+        <Anchor weight="normal" color="light-1">
+          {status?.confirmed?.block_indep_hash || '-'}
+        </Anchor>
       </Link>
       <Grid
         rows={['100%']}
