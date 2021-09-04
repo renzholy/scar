@@ -16,7 +16,7 @@ export default function usePeersLocation(config?: SWRConfiguration) {
         (
           await Promise.all(
             chunk(ips, 100).map((ipsChunk) =>
-              fetch('http://ip-api.com/batch?fields=lat,lon', {
+              fetch('//ip-api.com/batch?fields=lat,lon', {
                 method: 'POST',
                 body: JSON.stringify(ipsChunk),
                 headers: { 'Content-Type': 'application/jon' },
