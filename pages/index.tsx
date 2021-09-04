@@ -148,7 +148,7 @@ export default function Index() {
               <Text truncate={true}>
                 {transaction.recipient
                   ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
-                  : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} W`}
+                  : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
               </Text>
             ),
             align: 'end',
