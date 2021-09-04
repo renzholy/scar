@@ -73,7 +73,7 @@ export default function TransactionPage() {
         </Box>
       </Grid>
       <Heading level="3">Tags</Heading>
-      <Box height={transaction ? undefined : '109px'}>
+      <Box height={transaction ? undefined : '73px'}>
         <DataTable
           primaryKey="name"
           columns={[
