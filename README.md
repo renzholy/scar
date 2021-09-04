@@ -1,3 +1,3 @@
-# ARE
+# Scar
 
-Arweave Explorer
+An Arweave Explorer
