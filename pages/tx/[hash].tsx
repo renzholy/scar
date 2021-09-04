@@ -1,4 +1,3 @@
-import Arweave from 'arweave'
 import { Anchor, DataTable, Heading, Box, Text, Grid } from 'grommet'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
@@ -8,8 +7,7 @@ import Transaction from 'arweave/node/lib/transaction'
 import { useMemo } from 'react'
 import { formatNumber } from '../../utils/formatter'
 import DataPreview from '../../conponents/data-preview'
-
-const arweave = Arweave.init({})
+import { arweave, Arweave } from '../../utils/arweave'
 
 export default function TransactionPage() {
   const router = useRouter()

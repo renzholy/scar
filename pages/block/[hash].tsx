@@ -1,13 +1,12 @@
-import Arweave from 'arweave'
 import { GraphQLClient } from 'graphql-request'
 import { Box, DataTable, Grid, Heading, Text } from 'grommet'
 import { useRouter } from 'next/router'
 import prettyBytes from 'pretty-bytes'
 import useSWR from 'swr'
 import { getSdk } from '../../generated/graphql'
+import { arweave } from '../../utils/arweave'
 import { formatNumber } from '../../utils/formatter'
 
-const arweave = Arweave.init({})
 const client = new GraphQLClient('https://arweave.net/graphql')
 const sdk = getSdk(client)
 
