@@ -276,6 +276,7 @@ export type ListTransactionsQueryVariables = Exact<{
   after?: Maybe<Scalars['String']>
   first?: Maybe<Scalars['Int']>
   blockMin?: Maybe<Scalars['Int']>
+  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
 }>
 
 export type ListTransactionsQuery = {
@@ -320,8 +321,8 @@ export const ListBlocksDocument = gql`
   }
 `
 export const ListTransactionsDocument = gql`
-  query listTransactions($after: String, $first: Int = 100, $blockMin: Int) {
-    transactions(after: $after, first: $first, block: { min: $blockMin }) {
+  query listTransactions($after: String, $first: Int = 100, $blockMin: Int, $ids: [ID!]) {
+    transactions(after: $after, first: $first, block: { min: $blockMin }, ids: $ids) {
       pageInfo {
         hasNextPage
       }

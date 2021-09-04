@@ -48,15 +48,17 @@ export default function TransactionPage() {
         columns={['1/3', '1/3', '1/3']}
         fill="vertical"
         areas={[
-          { name: 'height', start: [0, 0], end: [0, 0] },
+          { name: 'confirmations', start: [0, 0], end: [0, 0] },
           { name: 'reward', start: [1, 0], end: [1, 0] },
           { name: 'size', start: [2, 0], end: [2, 0] },
         ]}
       >
-        <Box gridArea="height">
-          <Heading level="3">Height</Heading>
+        <Box gridArea="confirmations">
+          <Heading level="3">Confirmations</Heading>
           <Text>
-            {status?.confirmed ? formatNumber.format(status?.confirmed?.block_height) : '-'}
+            {status?.confirmed
+              ? formatNumber.format(status?.confirmed?.number_of_confirmations)
+              : '-'}
           </Text>
         </Box>
         <Box gridArea="reward">

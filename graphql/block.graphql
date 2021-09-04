@@ -15,8 +15,8 @@ query listBlocks($after: String, $first: Int = 100) {
   }
 }
 
-query listTransactions($after: String, $first: Int = 100, $blockMin: Int) {
-  transactions(after: $after, first: $first, block: { min: $blockMin }) {
+query listTransactions($after: String, $first: Int = 100, $blockMin: Int, $ids: [ID!]) {
+  transactions(after: $after, first: $first, block: { min: $blockMin }, ids: $ids) {
     pageInfo {
       hasNextPage
     }
