@@ -104,9 +104,7 @@ export default function TransactionPage() {
         </Anchor>
       ) : null}
       {transaction && parseInt(transaction.data_size, 10) <= 1024 * 1024 ? (
-        <Box background="light-6">
-          <DataPreview id={transaction.id} type={type} />
-        </Box>
+        <DataPreview id={transaction.id} type={type} />
       ) : (
         <Text>Too large to preview</Text>
       )}
