@@ -1,14 +1,10 @@
-import { GraphQLClient } from 'graphql-request'
 import { Box, DataTable, Grid, Heading, Text } from 'grommet'
 import { useRouter } from 'next/router'
 import prettyBytes from 'pretty-bytes'
 import useSWR from 'swr'
-import { getSdk } from '../../generated/graphql'
 import { arweave } from '../../utils/arweave'
 import { formatNumber } from '../../utils/formatter'
-
-const client = new GraphQLClient('https://arweave.net/graphql')
-const sdk = getSdk(client)
+import { sdk } from '../../utils/graphql'
 
 export default function BlockPage() {
   const router = useRouter()

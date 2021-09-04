@@ -1,17 +1,13 @@
-import { GraphQLClient } from 'graphql-request'
 import useSWR from 'swr'
 import { useMemo } from 'react'
 import { Box, DataTable, Grid, Heading, Text, WorldMap } from 'grommet'
 import TimeAgo from 'timeago-react'
 import prettyBytes from 'pretty-bytes'
 import { useRouter } from 'next/router'
-import { getSdk } from '../generated/graphql'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
 import { arweave } from '../utils/arweave'
-
-const client = new GraphQLClient('https://arweave.net/graphql')
-const sdk = getSdk(client)
+import { sdk } from '../utils/graphql'
 
 export default function Index() {
   const router = useRouter()
