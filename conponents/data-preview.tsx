@@ -13,7 +13,9 @@ export default function DataPreview(props: { id: string; type?: string }) {
       {data ? (
         <object data={URL.createObjectURL(data)} type={props.type} height="400"></object>
       ) : (
-        <Text>Loading...</Text>
+        <Box fill={true} align="center" justify="center">
+          <Text>Loading...</Text>
+        </Box>
       )}
     </Box>
   )
