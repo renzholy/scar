@@ -13,14 +13,14 @@ export default function BlockPage() {
     arweave.blocks.get(hash!),
   )
   const { data: transactions } = useSWR(
-    block ? ['listTransactions', ...block.txs] : null,
+    block ? ['listTransactions', 'ids', ...block.txs] : null,
     async () => {
       const {
         transactions: { edges },
       } = await sdk.listTransactions({ ids: block!.txs })
       return edges.map(({ node }) => node)
     },
-    { refreshInterval: 2000 },
+    { revalidateOnFocus: false },
   )
 
   if (!hash) {
@@ -58,7 +58,7 @@ export default function BlockPage() {
         </Box>
       </Grid>
       <Heading level="3">Transactions</Heading>
-      <Box height={transactions ? undefined : '73px'}>
+      <Box height={transactions && transactions.length ? undefined : '73px'}>
         <DataTable
           primaryKey="id"
           columns={[
@@ -108,7 +108,9 @@ export default function BlockPage() {
           ]}
           data={transactions}
           fill="vertical"
-          placeholder={transactions ? undefined : 'Loading...'}
+          placeholder={
+            transactions ? (transactions.length ? undefined : 'No transactions') : 'Loading...'
+          }
           onClickRow={({ datum: transaction }) => {
             router.push(`/tx/${transaction.id}`)
           }}
