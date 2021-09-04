@@ -93,82 +93,90 @@ export default function Index() {
         ) : null}
       </Grid>
       <Heading level="3">Latest blocks</Heading>
-      <DataTable
-        primaryKey="indep_hash"
-        columns={[
-          { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
-          {
-            property: 'timestamp',
-            render: (block) => <TimeAgo datetime={block.timestamp * 1000} />,
-            header: 'Timestamp',
-          },
-          {
-            property: 'block_size',
-            render: (block) =>
-              prettyBytes(parseInt(block.block_size as unknown as string, 10), { locale: true }),
-            header: 'Block size',
-            align: 'end',
-          },
-          { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
-        ]}
-        data={blocks}
-        onClickRow={({ datum: block }) => {
-          router.push(`/block/${block.indep_hash}`)
-        }}
-      />
+      <Box height="397px">
+        <DataTable
+          primaryKey="indep_hash"
+          columns={[
+            { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
+            {
+              property: 'timestamp',
+              render: (block) => <TimeAgo datetime={block.timestamp * 1000} />,
+              header: 'Timestamp',
+            },
+            {
+              property: 'block_size',
+              render: (block) =>
+                prettyBytes(parseInt(block.block_size as unknown as string, 10), { locale: true }),
+              header: 'Block size',
+              align: 'end',
+            },
+            { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
+          ]}
+          data={blocks}
+          fill="vertical"
+          placeholder={blocks ? undefined : 'Loading...'}
+          onClickRow={({ datum: block }) => {
+            router.push(`/block/${block.indep_hash}`)
+          }}
+        />
+      </Box>
       <Heading level="3">Latest transactions</Heading>
-      <DataTable
-        primaryKey="id"
-        columns={[
-          {
-            property: 'id',
-            render: (transaction) => (
-              <Text truncate={true}>
-                {transaction.id.substr(0, 8)}...
-                {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
-              </Text>
-            ),
-            header: 'Hash',
-          },
-          {
-            property: 'data.type',
-            header: 'Type',
-            render: (transaction) => (
-              <Text truncate={true}>
-                {transaction.recipient ? '[transfer]' : transaction.data.type || '-'}
-              </Text>
-            ),
-          },
-          {
-            property: 'data.size',
-            render: (transaction) => (
-              <Text truncate={true}>
-                {transaction.recipient
-                  ? ''
-                  : prettyBytes(parseInt(transaction.data.size, 10), { locale: true })}
-              </Text>
-            ),
-            align: 'end',
-            header: 'Size',
-          },
-          {
-            property: 'fee.ar',
-            render: (transaction) => (
-              <Text truncate={true}>
-                {transaction.recipient
-                  ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
-                  : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
-              </Text>
-            ),
-            align: 'end',
-            header: 'Reward',
-          },
-        ]}
-        data={transactions}
-        onClickRow={({ datum: transaction }) => {
-          router.push(`/tx/${transaction.id}`)
-        }}
-      />
+      <Box height="397px">
+        <DataTable
+          primaryKey="id"
+          columns={[
+            {
+              property: 'id',
+              render: (transaction) => (
+                <Text truncate={true}>
+                  {transaction.id.substr(0, 8)}...
+                  {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
+                </Text>
+              ),
+              header: 'Hash',
+            },
+            {
+              property: 'data.type',
+              header: 'Type',
+              render: (transaction) => (
+                <Text truncate={true}>
+                  {transaction.recipient ? '[transfer]' : transaction.data.type || '-'}
+                </Text>
+              ),
+            },
+            {
+              property: 'data.size',
+              render: (transaction) => (
+                <Text truncate={true}>
+                  {transaction.recipient
+                    ? ''
+                    : prettyBytes(parseInt(transaction.data.size, 10), { locale: true })}
+                </Text>
+              ),
+              align: 'end',
+              header: 'Size',
+            },
+            {
+              property: 'fee.ar',
+              render: (transaction) => (
+                <Text truncate={true}>
+                  {transaction.recipient
+                    ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
+                    : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
+                </Text>
+              ),
+              align: 'end',
+              header: 'Reward',
+            },
+          ]}
+          data={transactions}
+          fill="vertical"
+          placeholder={transactions ? undefined : 'Loading...'}
+          onClickRow={({ datum: transaction }) => {
+            router.push(`/tx/${transaction.id}`)
+          }}
+        />
+      </Box>
     </Box>
   )
 }

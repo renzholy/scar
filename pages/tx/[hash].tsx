@@ -4,19 +4,29 @@ import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import Link from 'next/link'
 import prettyBytes from 'pretty-bytes'
+import Transaction from 'arweave/node/lib/transaction'
+import { useMemo } from 'react'
 import { formatNumber } from '../../utils/formatter'
+import DataPreview from '../../conponents/data-preview'
 
 const arweave = Arweave.init({})
 
-export default function Transaction() {
+export default function TransactionPage() {
   const router = useRouter()
   const { hash } = router.query as { hash?: string }
   const { data: status } = useSWR(hash ? ['transactions', 'getStatus', hash] : null, () =>
     arweave.transactions.getStatus(hash!),
   )
-  const { data: transaction } = useSWR(hash ? ['transactions', 'get', hash] : null, () =>
-    arweave.transactions.get(hash!),
+  const { data: transaction } = useSWR<Transaction>(
+    hash ? ['transactions', 'get', hash] : null,
+    () => fetch(`https://arweave.net/tx/${hash}`).then((response) => response.json()),
   )
+  const type = useMemo(() => {
+    const tag = transaction?.tags.find(
+      ({ name }) => Arweave.utils.b64UrlToString(name).toLowerCase() === 'content-type',
+    )
+    return tag ? Arweave.utils.b64UrlToString(tag.value) : undefined
+  }, [transaction?.tags])
 
   if (!hash) {
     return null
@@ -51,7 +61,9 @@ export default function Transaction() {
         </Box>
         <Box gridArea="reward">
           <Heading level="3">Reward</Heading>
-          <Text>{transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'}</Text>
+          <Text>
+            {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
+          </Text>
         </Box>
         <Box gridArea="size">
           <Heading level="3">Size</Heading>
@@ -59,26 +71,45 @@ export default function Transaction() {
         </Box>
       </Grid>
       <Heading level="3">Tags</Heading>
-      <DataTable
-        primaryKey="name"
-        columns={[
-          {
-            property: 'name',
-            render: (tag) => Arweave.utils.b64UrlToString(tag.name),
-            header: 'Name',
-          },
-          {
-            property: 'value',
-            render: (tag) => Arweave.utils.b64UrlToString(tag.value),
-            header: 'Value',
-          },
-        ]}
-        data={transaction?.tags}
-      />
+      <Box height={transaction ? undefined : '109px'}>
+        <DataTable
+          primaryKey="name"
+          columns={[
+            {
+              property: 'name',
+              render: (tag) => Arweave.utils.b64UrlToString(tag.name),
+              header: 'Name',
+            },
+            {
+              property: 'value',
+              render: (tag) => Arweave.utils.b64UrlToString(tag.value),
+              header: 'Value',
+            },
+          ]}
+          data={transaction?.tags}
+          fill="vertical"
+          placeholder={transaction ? undefined : 'Loading...'}
+        />
+      </Box>
       <Heading level="3">Data</Heading>
-      <Text wordBreak="break-all">
-        <code>{transaction ? Buffer.from(transaction.data).toString() : '-'}</code>
-      </Text>
+      {transaction ? (
+        <Anchor
+          href={`https://arweave.net/${transaction.id}`}
+          target="_blank"
+          weight="normal"
+          margin={{ bottom: 'medium' }}
+          color="light-1"
+        >
+          https://arweave.net/{transaction.id}
+        </Anchor>
+      ) : null}
+      {transaction && parseInt(transaction.data_size, 10) <= 1024 * 1024 ? (
+        <Box background="light-6">
+          <DataPreview id={transaction.id} type={type} />
+        </Box>
+      ) : (
+        <Text>Too large to preview</Text>
+      )}
     </Box>
   )
 }
