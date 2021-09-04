@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { Box, DataTable, Grid, Heading, Text, WorldMap } from 'grommet'
 import TimeAgo from 'timeago-react'
 import prettyBytes from 'pretty-bytes'
+import { useRouter } from 'next/router'
 import { getSdk } from '../generated/graphql'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
@@ -14,6 +15,7 @@ const client = new GraphQLClient('https://arweave.net/graphql')
 const sdk = getSdk(client)
 
 export default function Index() {
+  const router = useRouter()
   const { data: locations } = usePeersLocation({
     refreshInterval: 30 * 1000,
     revalidateOnFocus: false,
@@ -40,7 +42,7 @@ export default function Index() {
     async () => {
       const {
         transactions: { edges },
-      } = await sdk.listTransactions({ first: 10 })
+      } = await sdk.listTransactions({ first: 10, blockMin: 1 })
       return edges.map(({ node }) => node)
     },
     { refreshInterval: 2000 },
@@ -60,7 +62,7 @@ export default function Index() {
           { name: 'latency', start: [2, 1], end: [2, 1] },
         ]}
       >
-        <WorldMap gridArea="map" places={places} alignSelf="center" height="max-content" />
+        <WorldMap gridArea="map" places={places} alignSelf="center" height="unset" />
         {info ? (
           <>
             <Box gridArea="peers" align="end">
@@ -110,7 +112,9 @@ export default function Index() {
           { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
         ]}
         data={blocks}
-        onClickRow={console.log}
+        onClickRow={({ datum: block }) => {
+          router.push(`/block/${block.indep_hash}`)
+        }}
       />
       <Heading level="3">Latest transactions</Heading>
       <DataTable
@@ -118,7 +122,12 @@ export default function Index() {
         columns={[
           {
             property: 'id',
-            render: (transaction) => <Text truncate={true}>{transaction.id}</Text>,
+            render: (transaction) => (
+              <Text truncate={true}>
+                {transaction.id.substr(0, 8)}...
+                {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
+              </Text>
+            ),
             header: 'Hash',
           },
           {
@@ -152,11 +161,13 @@ export default function Index() {
               </Text>
             ),
             align: 'end',
-            header: 'Fee/Quantity',
+            header: 'Reward',
           },
         ]}
         data={transactions}
-        onClickRow={console.log}
+        onClickRow={({ datum: transaction }) => {
+          router.push(`/tx/${transaction.id}`)
+        }}
       />
     </Box>
   )

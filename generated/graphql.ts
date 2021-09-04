@@ -275,6 +275,7 @@ export type ListBlocksQuery = {
 export type ListTransactionsQueryVariables = Exact<{
   after?: Maybe<Scalars['String']>
   first?: Maybe<Scalars['Int']>
+  blockMin?: Maybe<Scalars['Int']>
 }>
 
 export type ListTransactionsQuery = {
@@ -289,6 +290,7 @@ export type ListTransactionsQuery = {
         __typename?: 'Transaction'
         id: string
         recipient: string
+        block?: Maybe<{ __typename?: 'Block'; height: number }>
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
         quantity: { __typename?: 'Amount'; winston: string; ar: string }
@@ -318,8 +320,8 @@ export const ListBlocksDocument = gql`
   }
 `
 export const ListTransactionsDocument = gql`
-  query listTransactions($after: String, $first: Int = 100) {
-    transactions(after: $after, first: $first) {
+  query listTransactions($after: String, $first: Int = 100, $blockMin: Int) {
+    transactions(after: $after, first: $first, block: { min: $blockMin }) {
       pageInfo {
         hasNextPage
       }
@@ -327,6 +329,9 @@ export const ListTransactionsDocument = gql`
         cursor
         node {
           id
+          block {
+            height
+          }
           recipient
           owner {
             address

@@ -15,8 +15,8 @@ query listBlocks($after: String, $first: Int = 100) {
   }
 }
 
-query listTransactions($after: String, $first: Int = 100) {
-  transactions(after: $after, first: $first) {
+query listTransactions($after: String, $first: Int = 100, $blockMin: Int) {
+  transactions(after: $after, first: $first, block: { min: $blockMin }) {
     pageInfo {
       hasNextPage
     }
@@ -24,6 +24,9 @@ query listTransactions($after: String, $first: Int = 100) {
       cursor
       node {
         id
+        block {
+          height
+        }
         recipient
         owner {
           address
