@@ -9,9 +9,9 @@ export default function DataPreview(props: { id: string; type?: string }) {
   )
 
   return (
-    <Box background="light-6" height="400px">
+    <Box background="light-6">
       {data ? (
-        <object data={URL.createObjectURL(data)} type={props.type} height="400"></object>
+        <object data={URL.createObjectURL(data)} type={props.type}></object>
       ) : (
         <Box fill={true} align="center" justify="center">
           <Text>Loading...</Text>
