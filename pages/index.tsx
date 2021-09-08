@@ -46,15 +46,16 @@ export default function Index() {
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
       <Grid
-        rows={['1/2', '1/2']}
+        rows={['1/3', '1/3', '1/3']}
         columns={['2/3', '16.66%', '16.66%']}
         fill="vertical"
         areas={[
-          { name: 'map', start: [0, 0], end: [0, 1] },
+          { name: 'map', start: [0, 0], end: [0, 2] },
           { name: 'peers', start: [1, 0], end: [1, 0] },
           { name: 'blocks', start: [1, 1], end: [1, 1] },
           { name: 'queue', start: [2, 0], end: [2, 0] },
           { name: 'latency', start: [2, 1], end: [2, 1] },
+          { name: 'storage', start: [1, 2], end: [2, 2] },
         ]}
       >
         <WorldMap gridArea="map" places={places} alignSelf="center" height="unset" />
@@ -62,27 +63,38 @@ export default function Index() {
           <>
             <Box gridArea="peers" align="end">
               <Heading level="3" margin="0">
-                Peers
+                {formatNumber.format(info.peers)}
               </Heading>
-              <Text>{formatNumber.format(info.peers)}</Text>
+              <Text color="dark-6">Peers</Text>
             </Box>
             <Box gridArea="blocks" align="end">
               <Heading level="3" margin="0">
-                Blocks
+                {formatNumber.format(info.blocks)}
               </Heading>
-              <Text>{formatNumber.format(info.blocks)}</Text>
+              <Text color="dark-6">Blocks</Text>
             </Box>
             <Box gridArea="queue" align="end">
               <Heading level="3" margin="0">
-                Queue
+                {formatNumber.format(info.queue_length)}
               </Heading>
-              <Text>{formatNumber.format(info.queue_length)}</Text>
+              <Text color="dark-6">Queue</Text>
             </Box>
             <Box gridArea="latency" align="end">
               <Heading level="3" margin="0">
-                Latency
+                {formatNumber.format(info.node_state_latency)}
               </Heading>
-              <Text>{formatNumber.format(info.node_state_latency)}</Text>
+              <Text color="dark-6">Latency</Text>
+            </Box>
+            <Box gridArea="storage" align="end">
+              <Heading level="3" margin="0">
+                {blocks
+                  ? prettyBytes(parseInt(blocks[0].weave_size as unknown as string, 10), {
+                      maximumFractionDigits: 4,
+                      minimumFractionDigits: 4,
+                    })
+                  : '-'}
+              </Heading>
+              <Text color="dark-6">Storage</Text>
             </Box>
           </>
         ) : null}
