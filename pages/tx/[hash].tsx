@@ -67,7 +67,11 @@ export default function TransactionPage() {
         </Box>
         <Box gridArea="size">
           <Heading level="3">Size</Heading>
-          <Text>{transaction ? prettyBytes(parseInt(transaction.data_size, 10)) : '-'}</Text>
+          <Text>
+            {transaction
+              ? prettyBytes(parseInt(transaction.data_size, 10), { locale: true, binary: true })
+              : '-'}
+          </Text>
         </Box>
       </Grid>
       <Heading level="3">Tags</Heading>

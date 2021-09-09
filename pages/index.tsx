@@ -91,6 +91,8 @@ export default function Index() {
                   ? prettyBytes(parseInt(blocks[0].weave_size as unknown as string, 10), {
                       maximumFractionDigits: 4,
                       minimumFractionDigits: 4,
+                      locale: true,
+                      binary: true,
                     })
                   : '-'}
               </Heading>
@@ -113,7 +115,10 @@ export default function Index() {
             {
               property: 'block_size',
               render: (block) =>
-                prettyBytes(parseInt(block.block_size as unknown as string, 10), { locale: true }),
+                prettyBytes(parseInt(block.block_size as unknown as string, 10), {
+                  locale: true,
+                  binary: true,
+                }),
               header: 'Block size',
               align: 'end',
             },
@@ -157,7 +162,10 @@ export default function Index() {
                 <Text truncate={true}>
                   {transaction.recipient
                     ? ''
-                    : prettyBytes(parseInt(transaction.data.size, 10), { locale: true })}
+                    : prettyBytes(parseInt(transaction.data.size, 10), {
+                        locale: true,
+                        binary: true,
+                      })}
                 </Text>
               ),
               align: 'end',

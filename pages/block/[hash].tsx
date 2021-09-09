@@ -53,7 +53,12 @@ export default function BlockPage() {
         <Box gridArea="size">
           <Heading level="3">Size</Heading>
           <Text>
-            {block ? prettyBytes(parseInt(block.block_size as unknown as string, 10)) : '-'}
+            {block
+              ? prettyBytes(parseInt(block.block_size as unknown as string, 10), {
+                  locale: true,
+                  binary: true,
+                })
+              : '-'}
           </Text>
         </Box>
       </Grid>
@@ -87,7 +92,10 @@ export default function BlockPage() {
                 <Text truncate={true}>
                   {transaction.recipient
                     ? ''
-                    : prettyBytes(parseInt(transaction.data.size, 10), { locale: true })}
+                    : prettyBytes(parseInt(transaction.data.size, 10), {
+                        locale: true,
+                        binary: true,
+                      })}
                 </Text>
               ),
               align: 'end',
