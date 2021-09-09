@@ -107,11 +107,7 @@ export default function TransactionPage() {
           https://arweave.net/{transaction.id}
         </Anchor>
       ) : null}
-      {transaction && parseInt(transaction.data_size, 10) <= 1024 * 1024 ? (
-        <DataPreview id={transaction.id} type={type} />
-      ) : (
-        <Text>Too large to preview</Text>
-      )}
+      {transaction ? <DataPreview id={transaction.id} type={type} /> : null}
     </Box>
   )
 }
