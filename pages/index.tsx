@@ -122,7 +122,12 @@ export default function Index() {
               header: 'Block size',
               align: 'end',
             },
-            { property: 'txs', render: (block) => block.txs.length, header: 'Txs', align: 'end' },
+            {
+              property: 'txs',
+              render: (block) => formatNumber.format(block.txs.length),
+              header: 'Txs',
+              align: 'end',
+            },
           ]}
           data={blocks}
           fill="vertical"
