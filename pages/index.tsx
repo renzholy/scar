@@ -22,6 +22,11 @@ export default function Index() {
   const { data: info } = useSWR(['getInfo'], () => arweave.network.getInfo(), {
     refreshInterval: 2000,
   })
+  const { data: pendings } = useSWR<string[]>(
+    'https://arweave.net/tx/pending',
+    (url) => fetch(url).then((response) => response.json()),
+    { refreshInterval: 2000 },
+  )
   const { data: blocks } = useSWR(
     ['listBlocks'],
     async () => {
@@ -53,9 +58,10 @@ export default function Index() {
           { name: 'map', start: [0, 0], end: [0, 2] },
           { name: 'peers', start: [1, 0], end: [1, 0] },
           { name: 'blocks', start: [1, 1], end: [1, 1] },
+          { name: 'storage', start: [1, 2], end: [1, 2] },
           { name: 'queue', start: [2, 0], end: [2, 0] },
           { name: 'latency', start: [2, 1], end: [2, 1] },
-          { name: 'storage', start: [1, 2], end: [2, 2] },
+          { name: 'pendings', start: [2, 2], end: [2, 2] },
         ]}
       >
         <WorldMap gridArea="map" places={places} alignSelf="center" height="unset" />
@@ -73,6 +79,17 @@ export default function Index() {
               </Heading>
               <Text color="dark-6">Blocks</Text>
             </Box>
+            <Box gridArea="storage" align="end">
+              <Heading level="3" margin="0">
+                {blocks
+                  ? prettyBytes(parseInt(blocks[0].weave_size as unknown as string, 10), {
+                      locale: true,
+                      binary: true,
+                    })
+                  : '-'}
+              </Heading>
+              <Text color="dark-6">Storage</Text>
+            </Box>
             <Box gridArea="queue" align="end">
               <Heading level="3" margin="0">
                 {formatNumber.format(info.queue_length)}
@@ -85,18 +102,11 @@ export default function Index() {
               </Heading>
               <Text color="dark-6">Latency</Text>
             </Box>
-            <Box gridArea="storage" align="end">
+            <Box gridArea="pendings" align="end">
               <Heading level="3" margin="0">
-                {blocks
-                  ? prettyBytes(parseInt(blocks[0].weave_size as unknown as string, 10), {
-                      maximumFractionDigits: 4,
-                      minimumFractionDigits: 4,
-                      locale: true,
-                      binary: true,
-                    })
-                  : '-'}
+                {pendings ? formatNumber.format(pendings.length) : '-'}
               </Heading>
-              <Text color="dark-6">Storage</Text>
+              <Text color="dark-6">Pendings</Text>
             </Box>
           </>
         ) : null}
