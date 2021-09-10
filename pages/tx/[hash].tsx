@@ -96,18 +96,22 @@ export default function TransactionPage() {
         />
       </Box>
       <Heading level="3">Data</Heading>
-      {transaction ? (
-        <Anchor
-          href={`https://arweave.net/${transaction.id}`}
-          target="_blank"
-          weight="normal"
-          margin={{ bottom: 'medium' }}
-          color="light-1"
-        >
-          https://arweave.net/{transaction.id}
-        </Anchor>
-      ) : null}
-      {transaction ? <DataPreview id={transaction.id} type={type} /> : null}
+      {transaction && parseInt(transaction.data_size, 10) > 0 ? (
+        <>
+          <Anchor
+            href={`https://arweave.net/${transaction.id}`}
+            target="_blank"
+            weight="normal"
+            margin={{ bottom: 'medium' }}
+            color="light-1"
+          >
+            https://arweave.net/{transaction.id}
+          </Anchor>
+          <DataPreview id={transaction.id} type={type} />
+        </>
+      ) : (
+        <Text>No data</Text>
+      )}
     </Box>
   )
 }
