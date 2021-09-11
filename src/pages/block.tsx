@@ -1,4 +1,5 @@
 import { Box, Grid, Heading, Text } from 'grommet'
+import chunk from 'lodash/chunk'
 import prettyBytes from 'pretty-bytes'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
@@ -16,10 +17,17 @@ export default function BlockPage() {
   const { data: transactions } = useSWR(
     block ? ['listTransactions', 'ids', ...block.txs] : null,
     async () => {
-      const {
-        transactions: { edges },
-      } = await sdk.listTransactions({ ids: block!.txs })
-      return edges.map(({ node }) => node)
+      const nodes = (
+        await Promise.all(
+          chunk(block!.txs, 100).map(async (ids) => {
+            const {
+              transactions: { edges },
+            } = await sdk.listTransactions({ ids })
+            return edges
+          }),
+        )
+      ).flat()
+      return nodes.map(({ node }) => node)
     },
     { revalidateOnFocus: false },
   )
@@ -76,7 +84,8 @@ export default function BlockPage() {
         </Box>
       </Grid>
       <Heading level="3" color="dark-6">
-        Transactions
+        Transactions&nbsp;
+        <Text color="white">({block?.txs?.length || '-'})</Text>
       </Heading>
       <Box
         height={transactions && transactions.length ? undefined : 'small'}
