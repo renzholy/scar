@@ -77,7 +77,6 @@ export default function Layout(props: { children: ReactNode }) {
               onChange={(e) => setKeyword(e.target.value)}
               onSuggestionSelect={(s) => {
                 history.push(s.suggestion.value)
-                setKeyword('')
               }}
             />
           </Box>
