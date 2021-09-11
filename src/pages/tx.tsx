@@ -29,10 +29,6 @@ export default function TransactionPage() {
     transaction ? ['wallets', 'ownerToAddress', transaction.owner] : null,
     () => arweave.wallets.ownerToAddress(transaction!.owner),
   )
-  const { data: miner } = useSWR(
-    transaction ? ['wallets', 'ownerToAddress', transaction.signature] : null,
-    () => arweave.wallets.ownerToAddress(transaction!.signature),
-  )
 
   if (!hash) {
     return null
@@ -49,8 +45,8 @@ export default function TransactionPage() {
         fill="vertical"
         areas={[
           { name: 'size', start: [0, 0], end: [0, 0] },
-          { name: 'confirmations', start: [1, 0], end: [1, 0] },
-          { name: 'reward', start: [2, 0], end: [2, 0] },
+          { name: 'reward', start: [1, 0], end: [1, 0] },
+          { name: 'confirmations', start: [2, 0], end: [2, 0] },
         ]}
       >
         <Box gridArea="size">
@@ -65,6 +61,14 @@ export default function TransactionPage() {
               : '-'}
           </Text>
         </Box>
+        <Box gridArea="reward">
+          <Heading level="3" color="dark-6">
+            Reward
+          </Heading>
+          <Text>
+            {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
+          </Text>
+        </Box>
         <Box gridArea="confirmations">
           <Heading level="3" color="dark-6">
             Confirmations
@@ -73,14 +77,6 @@ export default function TransactionPage() {
             {status?.confirmed
               ? formatNumber.format(status?.confirmed?.number_of_confirmations)
               : '-'}
-          </Text>
-        </Box>
-        <Box gridArea="reward">
-          <Heading level="3" color="dark-6">
-            Reward
-          </Heading>
-          <Text>
-            {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
           </Text>
         </Box>
       </Grid>
@@ -99,12 +95,6 @@ export default function TransactionPage() {
       </Heading>
       <AnchorLink to={`/address/${sender}`} weight="normal" color="light-1">
         {sender || '-'}
-      </AnchorLink>
-      <Heading level="3" color="dark-6">
-        Miner
-      </Heading>
-      <AnchorLink to={`/address/${miner}`} weight="normal" color="light-1">
-        {miner || '-'}
       </AnchorLink>
       {transaction?.target ? (
         <>

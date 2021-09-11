@@ -2,6 +2,7 @@ import { Box, Grid, Heading, Text } from 'grommet'
 import prettyBytes from 'pretty-bytes'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
+import AnchorLink from '../components/anchor-link'
 import TransactionsList from '../components/transactions-list'
 import { arweave } from '../utils/arweave'
 import { sdk } from '../utils/graphql'
@@ -31,14 +32,20 @@ export default function BlockPage() {
         Block
       </Heading>
       <Text>{block?.indep_hash || '-'}</Text>
+      <Heading level="3" color="dark-6">
+        Miner
+      </Heading>
+      <AnchorLink to={`/address/${block?.reward_addr}`} weight="normal" color="light-1">
+        {block?.reward_addr || '-'}
+      </AnchorLink>
       <Grid
         rows={['100%']}
         columns={['1/3', '1/3', '1/3']}
         fill="vertical"
         areas={[
           { name: 'height', start: [0, 0], end: [0, 0] },
-          { name: 'timestamp', start: [1, 0], end: [1, 0] },
-          { name: 'size', start: [2, 0], end: [2, 0] },
+          { name: 'size', start: [1, 0], end: [1, 0] },
+          { name: 'timestamp', start: [2, 0], end: [2, 0] },
         ]}
       >
         <Box gridArea="height">
@@ -47,15 +54,9 @@ export default function BlockPage() {
           </Heading>
           <Text>#{block?.height}</Text>
         </Box>
-        <Box gridArea="timestamp">
-          <Heading level="3" color="dark-6">
-            Timestamp
-          </Heading>
-          <Text>{block ? new Date(block.timestamp * 1000).toLocaleString() : '-'}</Text>
-        </Box>
         <Box gridArea="size">
           <Heading level="3" color="dark-6">
-            Size
+            Block size
           </Heading>
           <Text>
             {block
@@ -65,6 +66,12 @@ export default function BlockPage() {
                 })
               : '-'}
           </Text>
+        </Box>
+        <Box gridArea="timestamp">
+          <Heading level="3" color="dark-6">
+            Timestamp
+          </Heading>
+          <Text>{block ? new Date(block.timestamp * 1000).toLocaleString() : '-'}</Text>
         </Box>
       </Grid>
       <Heading level="3" color="dark-6">
