@@ -1,6 +1,6 @@
 import useSWR from 'swr'
-import { useMemo } from 'react'
-import { Box, DataTable, Grid, Heading, Text, WorldMap } from 'grommet'
+import { useContext, useMemo } from 'react'
+import { Box, DataTable, Grid, Heading, ResponsiveContext, Text, WorldMap } from 'grommet'
 import TimeAgo from 'timeago-react'
 import prettyBytes from 'pretty-bytes'
 import { useRouter } from 'next/router'
@@ -47,39 +47,54 @@ export default function Index() {
     },
     { refreshInterval: 2000 },
   )
+  const size = useContext(ResponsiveContext)
 
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
+      {size === 'small' ? (
+        <WorldMap gridArea="map" places={places} alignSelf="center" height="unset" />
+      ) : null}
       <Grid
-        rows={['1/3', '1/3', '1/3']}
-        columns={['2/3', '16.66%', '16.66%']}
+        rows={size === 'small' ? ['1/2', '1/2'] : ['1/3', '1/3', '1/3']}
+        columns={size === 'small' ? ['1/3', '1/3', '1/3'] : ['2/3', '16.66%', '16.66%']}
         fill="vertical"
-        areas={[
-          { name: 'map', start: [0, 0], end: [0, 2] },
-          { name: 'peers', start: [1, 0], end: [1, 0] },
-          { name: 'blocks', start: [1, 1], end: [1, 1] },
-          { name: 'storage', start: [1, 2], end: [1, 2] },
-          { name: 'queue', start: [2, 0], end: [2, 0] },
-          { name: 'latency', start: [2, 1], end: [2, 1] },
-          { name: 'pendings', start: [2, 2], end: [2, 2] },
-        ]}
+        areas={
+          size === 'small'
+            ? [
+                { name: 'peers', start: [0, 0], end: [0, 0] },
+                { name: 'blocks', start: [1, 0], end: [1, 0] },
+                { name: 'storage', start: [2, 0], end: [2, 0] },
+                { name: 'queue', start: [0, 1], end: [0, 1] },
+                { name: 'latency', start: [1, 1], end: [1, 1] },
+                { name: 'pendings', start: [2, 1], end: [2, 1] },
+              ]
+            : [
+                { name: 'map', start: [0, 0], end: [0, 2] },
+                { name: 'peers', start: [1, 0], end: [1, 0] },
+                { name: 'blocks', start: [1, 1], end: [1, 1] },
+                { name: 'storage', start: [1, 2], end: [1, 2] },
+                { name: 'queue', start: [2, 0], end: [2, 0] },
+                { name: 'latency', start: [2, 1], end: [2, 1] },
+                { name: 'pendings', start: [2, 2], end: [2, 2] },
+              ]
+        }
       >
         <WorldMap gridArea="map" places={places} alignSelf="center" height="unset" />
         {info ? (
           <>
-            <Box gridArea="peers" align="end">
+            <Box gridArea="peers" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {formatNumber.format(info.peers)}
               </Heading>
               <Text color="dark-6">Peers</Text>
             </Box>
-            <Box gridArea="blocks" align="end">
+            <Box gridArea="blocks" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {formatNumber.format(info.blocks)}
               </Heading>
               <Text color="dark-6">Blocks</Text>
             </Box>
-            <Box gridArea="storage" align="end">
+            <Box gridArea="storage" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {blocks
                   ? prettyBytes(parseInt(blocks[0].weave_size as unknown as string, 10), {
@@ -90,19 +105,19 @@ export default function Index() {
               </Heading>
               <Text color="dark-6">Storage</Text>
             </Box>
-            <Box gridArea="queue" align="end">
+            <Box gridArea="queue" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {formatNumber.format(info.queue_length)}
               </Heading>
               <Text color="dark-6">Queue</Text>
             </Box>
-            <Box gridArea="latency" align="end">
+            <Box gridArea="latency" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {formatNumber.format(info.node_state_latency)}
               </Heading>
               <Text color="dark-6">Latency</Text>
             </Box>
-            <Box gridArea="pendings" align="end">
+            <Box gridArea="pendings" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
                 {pendings ? formatNumber.format(pendings.length) : '-'}
               </Heading>
@@ -112,7 +127,7 @@ export default function Index() {
         ) : null}
       </Grid>
       <Heading level="3">Latest blocks</Heading>
-      <Box height="397px">
+      <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
         <DataTable
           primaryKey="indep_hash"
           columns={[
@@ -148,14 +163,14 @@ export default function Index() {
         />
       </Box>
       <Heading level="3">Latest transactions</Heading>
-      <Box height="397px">
+      <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
         <DataTable
           primaryKey="id"
           columns={[
             {
               property: 'id',
               render: (transaction) => (
-                <Text truncate={true}>
+                <Text>
                   {transaction.id.substr(0, 8)}...
                   {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
                 </Text>
@@ -166,15 +181,13 @@ export default function Index() {
               property: 'data.type',
               header: 'Type',
               render: (transaction) => (
-                <Text truncate={true}>
-                  {transaction.recipient ? '[transfer]' : transaction.data.type || '-'}
-                </Text>
+                <Text>{transaction.recipient ? '[transfer]' : transaction.data.type || '-'}</Text>
               ),
             },
             {
               property: 'data.size',
               render: (transaction) => (
-                <Text truncate={true}>
+                <Text>
                   {transaction.recipient
                     ? ''
                     : prettyBytes(parseInt(transaction.data.size, 10), {
@@ -189,7 +202,7 @@ export default function Index() {
             {
               property: 'fee.ar',
               render: (transaction) => (
-                <Text truncate={true}>
+                <Text>
                   {transaction.recipient
                     ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
                     : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
