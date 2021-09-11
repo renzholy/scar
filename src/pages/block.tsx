@@ -62,7 +62,10 @@ export default function BlockPage() {
         </Box>
       </Grid>
       <Heading level="3">Transactions</Heading>
-      <Box height={transactions && transactions.length ? undefined : '73px'}>
+      <Box
+        height={transactions && transactions.length ? undefined : '73px'}
+        overflow={{ vertical: 'auto' }}
+      >
         <TransactionsList value={transactions} />
       </Box>
     </Box>

@@ -40,10 +40,20 @@ export default function AddressPage() {
       <Text>{hash}</Text>
       <Heading level="3">Balance</Heading>
       <Text>{balance === undefined ? '-' : formatBalance(balance, 12)}&nbsp;AR</Text>
-      <Heading level="3">Sent transactions</Heading>
-      <TransactionsList value={sentTransactions} />
       <Heading level="3">Received transactions</Heading>
-      <TransactionsList value={receivedTransactions} />
+      <Box
+        height={receivedTransactions && receivedTransactions.length ? undefined : '73px'}
+        overflow={{ vertical: 'auto' }}
+      >
+        <TransactionsList value={receivedTransactions} />
+      </Box>
+      <Heading level="3">Sent transactions</Heading>
+      <Box
+        height={sentTransactions && sentTransactions.length ? undefined : '73px'}
+        overflow={{ vertical: 'auto' }}
+      >
+        <TransactionsList value={sentTransactions} />
+      </Box>
     </Box>
   )
 }
