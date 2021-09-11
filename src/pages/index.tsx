@@ -169,7 +169,7 @@ export default function IndexPage() {
       </Box>
       <Heading level="3">Latest transactions</Heading>
       <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
-        <TransactionsList value={transactions} />
+        <TransactionsList value={transactions} relativeTime={true} />
       </Box>
     </Box>
   )

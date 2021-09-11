@@ -293,7 +293,7 @@ export type ListTransactionsQuery = {
         __typename?: 'Transaction'
         id: string
         recipient: string
-        block?: Maybe<{ __typename?: 'Block'; height: number }>
+        block?: Maybe<{ __typename?: 'Block'; height: number; id: string; timestamp: number }>
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
         quantity: { __typename?: 'Amount'; winston: string; ar: string }
@@ -348,6 +348,8 @@ export const ListTransactionsDocument = gql`
           id
           block {
             height
+            id
+            timestamp
           }
           recipient
           owner {

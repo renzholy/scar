@@ -40,6 +40,8 @@ query listTransactions(
         id
         block {
           height
+          id
+          timestamp
         }
         recipient
         owner {
