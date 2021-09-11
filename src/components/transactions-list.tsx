@@ -54,7 +54,7 @@ export default function TransactionsList(props: {
                 new Date(transaction.block.timestamp * 1000).toLocaleString()
               )
             ) : (
-              '-'
+              'Pending'
             ),
           align: 'end',
           header: 'Timestamp',
