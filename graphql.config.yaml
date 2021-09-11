@@ -2,7 +2,7 @@ overwrite: true
 schema: 'https://arweave.net/graphql'
 documents: 'graphql/*.graphql'
 generates:
-  generated/graphql.ts:
+  src/generated/graphql.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'
