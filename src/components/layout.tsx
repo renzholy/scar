@@ -1,25 +1,50 @@
-import { Anchor, Box, Nav, TextInput } from 'grommet'
-import { ReactNode, useState } from 'react'
+import { Anchor, Box, Nav, Spinner, TextInput } from 'grommet'
+import { ReactNode, useMemo, useState } from 'react'
 import * as Icon from 'grommet-icons'
 import useSWR from 'swr'
+import compact from 'lodash/compact'
+import { useHistory } from 'react-router'
 import { arweave } from '../utils/arweave'
 import AnchorLink from './anchor-link'
 
 export default function Layout(props: { children: ReactNode }) {
+  const history = useHistory()
   const [keyword, setKeyword] = useState('')
-  const { data } = useSWR(keyword ? ['search', keyword] : null, async () => {
+  const { data, isValidating } = useSWR(keyword ? ['search', keyword] : null, async () => {
     try {
-      const [block, transaction, wallet] = await Promise.all([
-        arweave.transactions.get(keyword).catch(() => null),
-        arweave.blocks.get(keyword).catch(() => null),
-        arweave.wallets.getBalance(keyword).catch(() => null),
+      const [block, transaction, address] = await Promise.all([
+        arweave.blocks.get(keyword).catch(() => undefined),
+        arweave.transactions.get(keyword).catch(() => undefined),
+        arweave.wallets
+          .getBalance(keyword)
+          .then((balance) => (balance === '0' || !/^\d+$/.test(balance) ? undefined : balance))
+          .catch(() => undefined),
       ])
-      return { transaction, block, wallet }
+      return { transaction, block, address }
     } catch {
       return undefined
     }
   })
-  console.log(data)
+  const suggestions = useMemo(
+    () =>
+      data
+        ? compact([
+            data.block
+              ? {
+                  label: `Block: ${data.block.indep_hash}`,
+                  value: `/block/${data.block.indep_hash}`,
+                }
+              : undefined,
+            data.transaction
+              ? { label: `Tx: ${data.transaction.id}`, value: `/tx/${data.transaction.id}` }
+              : undefined,
+            data.address
+              ? { label: `Address: ${keyword}`, value: `/address/${keyword}` }
+              : undefined,
+          ])
+        : undefined,
+    [data, keyword],
+  )
 
   return (
     <>
@@ -40,11 +65,16 @@ export default function Layout(props: { children: ReactNode }) {
           <Box fill="horizontal">
             <TextInput
               size="xsmall"
-              icon={<Icon.Search />}
+              icon={isValidating ? <Spinner /> : <Icon.Search />}
               plain={true}
-              placeholder="block, transaction"
+              placeholder="block, transaction or address hash"
               value={keyword}
+              suggestions={suggestions}
               onChange={(e) => setKeyword(e.target.value)}
+              onSuggestionSelect={(s) => {
+                history.push(s.suggestion.value)
+                setKeyword('')
+              }}
             />
           </Box>
           <Anchor href="https://github.com/renzholy/scar" target="_blank" style={{ lineHeight: 0 }}>
