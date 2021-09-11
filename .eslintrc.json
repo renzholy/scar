@@ -1,10 +1,5 @@
 {
-  "extends": [
-    "airbnb-typescript",
-    "plugin:@next/next/recommended",
-    "plugin:react-hooks/recommended",
-    "prettier"
-  ],
+  "extends": ["airbnb-typescript", "plugin:react-hooks/recommended", "prettier"],
   "plugins": ["prettier", "react", "import", "react-hooks"],
   "env": {
     "browser": true

@@ -1,17 +1,16 @@
 import { Anchor, DataTable, Heading, Box, Text, Grid } from 'grommet'
-import { useRouter } from 'next/router'
 import useSWR from 'swr'
-import Link from 'next/link'
 import prettyBytes from 'pretty-bytes'
 import Transaction from 'arweave/node/lib/transaction'
 import { useMemo } from 'react'
-import { formatNumber } from '../../utils/formatter'
-import DataPreview from '../../conponents/data-preview'
-import { arweave, Arweave } from '../../utils/arweave'
+import { useParams } from 'react-router'
+import { formatNumber } from '../utils/formatter'
+import DataPreview from '../components/data-preview'
+import { arweave, Arweave } from '../utils/arweave'
+import AnchorLink from '../components/anchor-link'
 
 export default function TransactionPage() {
-  const router = useRouter()
-  const { hash } = router.query as { hash?: string }
+  const { hash } = useParams<{ hash?: string }>()
   const { data: status } = useSWR(hash ? ['transactions', 'getStatus', hash] : null, () =>
     arweave.transactions.getStatus(hash!),
   )
@@ -36,11 +35,11 @@ export default function TransactionPage() {
       </Heading>
       <Text>{transaction?.id || '-'}</Text>
       <Heading level="3">Block</Heading>
-      <Link href={`/block/${status?.confirmed?.block_indep_hash}`} passHref={true} shallow={true}>
+      <AnchorLink to={`/block/${status?.confirmed?.block_indep_hash}`}>
         <Anchor weight="normal" color="light-1">
           {status?.confirmed?.block_indep_hash || '-'}
         </Anchor>
-      </Link>
+      </AnchorLink>
       <Grid
         rows={['100%']}
         columns={['1/3', '1/3', '1/3']}

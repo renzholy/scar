@@ -3,14 +3,14 @@ import { useContext, useMemo } from 'react'
 import { Box, DataTable, Grid, Heading, ResponsiveContext, Text, WorldMap } from 'grommet'
 import TimeAgo from 'timeago-react'
 import prettyBytes from 'pretty-bytes'
-import { useRouter } from 'next/router'
+import { useHistory } from 'react-router'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
 import { arweave } from '../utils/arweave'
 import { sdk } from '../utils/graphql'
 
-export default function Index() {
-  const router = useRouter()
+export default function IndexPage() {
+  const history = useHistory()
   const { data: locations } = usePeersLocation({
     revalidateOnFocus: false,
   })
@@ -161,7 +161,7 @@ export default function Index() {
           fill="vertical"
           placeholder={blocks ? undefined : 'Loading...'}
           onClickRow={({ datum: block }) => {
-            router.push(`/block/${block.indep_hash}`, undefined, { shallow: true })
+            history.push(`/block/${block.indep_hash}`)
           }}
         />
       </Box>
@@ -219,7 +219,7 @@ export default function Index() {
           fill="vertical"
           placeholder={transactions ? undefined : 'Loading...'}
           onClickRow={({ datum: transaction }) => {
-            router.push(`/tx/${transaction.id}`, undefined, { shallow: true })
+            history.push(`/tx/${transaction.id}`)
           }}
         />
       </Box>

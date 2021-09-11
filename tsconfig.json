@@ -14,9 +14,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "noFallthroughCasesInSwitch": true,
-    "baseUrl": "src"
+    "noFallthroughCasesInSwitch": true
   },
-  "include": ["**/*", "next.config.js", "next-env.d.ts"],
+  "include": ["**/*", "vite.config.ts"],
   "exclude": ["node_modules"]
 }

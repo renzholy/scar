@@ -1,14 +1,14 @@
 import { Box, DataTable, Grid, Heading, Text } from 'grommet'
-import { useRouter } from 'next/router'
 import prettyBytes from 'pretty-bytes'
+import { useHistory, useParams } from 'react-router-dom'
 import useSWR from 'swr'
-import { arweave } from '../../utils/arweave'
-import { formatNumber } from '../../utils/formatter'
-import { sdk } from '../../utils/graphql'
+import { arweave } from '../utils/arweave'
+import { formatNumber } from '../utils/formatter'
+import { sdk } from '../utils/graphql'
 
 export default function BlockPage() {
-  const router = useRouter()
-  const { hash } = router.query as { hash?: string }
+  const history = useHistory()
+  const { hash } = useParams<{ hash?: string }>()
   const { data: block } = useSWR(hash ? ['blocks', 'get', hash] : null, () =>
     arweave.blocks.get(hash!),
   )
@@ -120,7 +120,7 @@ export default function BlockPage() {
             transactions ? (transactions.length ? undefined : 'No transactions') : 'Loading...'
           }
           onClickRow={({ datum: transaction }) => {
-            router.push(`/tx/${transaction.id}`, undefined, { shallow: true })
+            history.push(`/tx/${transaction.id}`)
           }}
         />
       </Box>

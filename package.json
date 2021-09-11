@@ -5,10 +5,9 @@
   "author": "renzholy <renzholy@gmail.com>",
   "license": "AGPL-3.0",
   "scripts": {
-    "dev": "next",
-    "start": "next start",
-    "build": "next build",
-    "export": "next export",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "format": "prettier --config .prettierrc.json --write .",
     "lint": "eslint .",
     "gen": "graphql-codegen --config graphql.config.yaml && prettier --config .prettierrc.json --write generated/*"
@@ -20,10 +19,10 @@
     "grommet": "^2.17.5",
     "grommet-icons": "^4.6.2",
     "lodash": "^4.17.21",
-    "next": "^11.1.2",
     "pretty-bytes": "^5.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.0",
     "styled-components": "^5.3.1",
     "swr": "^1.0.0",
     "timeago-react": "^3.0.3"
@@ -37,13 +36,14 @@
     "@types/lodash": "^4.14.172",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.1.8",
     "@types/styled-components": "^5.1.14",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/typescript-estree": "^4.31.0",
+    "@vitejs/plugin-react-refresh": "^1.3.6",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^14.0.0",
-    "eslint-config-next": "^11.1.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
@@ -51,6 +51,8 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.3.2",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "vite": "^2.5.6",
+    "vite-react-jsx": "^1.1.2"
   }
 }
