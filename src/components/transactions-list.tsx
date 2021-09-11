@@ -62,7 +62,11 @@ export default function TransactionsList(props: {
       ]}
       data={transactions}
       fill="vertical"
-      placeholder={transactions ? undefined : <DataTablePlaceholder />}
+      placeholder={
+        transactions?.length ? undefined : (
+          <DataTablePlaceholder empty={transactions?.length === 0} />
+        )
+      }
       onClickRow={({ datum: transaction }) => {
         history.push(`/tx/${transaction.id}`)
       }}

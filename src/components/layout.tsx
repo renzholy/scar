@@ -61,7 +61,7 @@ export default function Layout(props: { children: ReactNode }) {
           align="center"
           gap="20px"
         >
-          <Box width="min-content">
+          <Box flex={{ shrink: 0 }}>
             <AnchorLink to="/" color="light-1">
               SCAR
             </AnchorLink>

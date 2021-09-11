@@ -27,7 +27,7 @@ export default function BlockPage() {
   }
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
-      <Heading level="3" margin={{ top: '0px' }}>
+      <Heading level="3" color="dark-6" margin={{ top: '0px' }}>
         Block
       </Heading>
       <Text>{block?.indep_hash || '-'}</Text>
@@ -42,15 +42,21 @@ export default function BlockPage() {
         ]}
       >
         <Box gridArea="height">
-          <Heading level="3">Height</Heading>
+          <Heading level="3" color="dark-6">
+            Height
+          </Heading>
           <Text>#{block?.height}</Text>
         </Box>
         <Box gridArea="timestamp">
-          <Heading level="3">Timestamp</Heading>
+          <Heading level="3" color="dark-6">
+            Timestamp
+          </Heading>
           <Text>{block ? new Date(block.timestamp * 1000).toLocaleString() : '-'}</Text>
         </Box>
         <Box gridArea="size">
-          <Heading level="3">Size</Heading>
+          <Heading level="3" color="dark-6">
+            Size
+          </Heading>
           <Text>
             {block
               ? prettyBytes(parseInt(block.block_size as unknown as string, 10), {
@@ -61,9 +67,11 @@ export default function BlockPage() {
           </Text>
         </Box>
       </Grid>
-      <Heading level="3">Transactions</Heading>
+      <Heading level="3" color="dark-6">
+        Transactions
+      </Heading>
       <Box
-        height={transactions && transactions.length ? undefined : '73px'}
+        height={transactions && transactions.length ? undefined : 'small'}
         overflow={{ vertical: 'auto' }}
       >
         <TransactionsList value={transactions} />

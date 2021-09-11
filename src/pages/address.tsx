@@ -34,22 +34,28 @@ export default function AddressPage() {
 
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
-      <Heading level="3" margin={{ top: '0px' }}>
+      <Heading level="3" color="dark-6" margin={{ top: '0px' }}>
         Address
       </Heading>
       <Text>{hash}</Text>
-      <Heading level="3">Balance</Heading>
+      <Heading level="3" color="dark-6">
+        Balance
+      </Heading>
       <Text>{balance === undefined ? '-' : formatBalance(balance, 12)}&nbsp;AR</Text>
-      <Heading level="3">Received transactions</Heading>
+      <Heading level="3" color="dark-6">
+        Received transactions
+      </Heading>
       <Box
-        height={receivedTransactions && receivedTransactions.length ? undefined : '73px'}
+        height={receivedTransactions && receivedTransactions.length ? undefined : 'small'}
         overflow={{ vertical: 'auto' }}
       >
         <TransactionsList value={receivedTransactions} />
       </Box>
-      <Heading level="3">Sent transactions</Heading>
+      <Heading level="3" color="dark-6">
+        Sent transactions
+      </Heading>
       <Box
-        height={sentTransactions && sentTransactions.length ? undefined : '73px'}
+        height={sentTransactions && sentTransactions.length ? undefined : 'small'}
         overflow={{ vertical: 'auto' }}
       >
         <TransactionsList value={sentTransactions} />

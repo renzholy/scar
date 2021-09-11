@@ -1,6 +1,6 @@
 import { Box, Spinner, Text } from 'grommet'
 
-export default function DataTablePlaceholder() {
+export default function DataTablePlaceholder(props: { empty: boolean }) {
   return (
     <Box
       fill
@@ -8,11 +8,16 @@ export default function DataTablePlaceholder() {
       justify="center"
       direction="row"
       pad="large"
-      gap="small"
       background={{ color: 'background-front', opacity: 'strong' }}
     >
-      <Spinner />
-      <Text weight="bold">Loading ...</Text>
+      {props.empty ? (
+        <Text weight="bold">No data</Text>
+      ) : (
+        <>
+          <Spinner margin={{ right: 'small' }} />
+          <Text weight="bold">Loading ...</Text>
+        </>
+      )}
     </Box>
   )
 }

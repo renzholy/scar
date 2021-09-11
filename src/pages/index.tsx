@@ -25,12 +25,12 @@ export default function IndexPage() {
     [locations],
   )
   const { data: info } = useSWR(['getInfo'], () => arweave.network.getInfo(), {
-    refreshInterval: 2000,
+    refreshInterval: 2 * 1000,
   })
   const { data: pendings } = useSWR<string[]>(
     'https://arweave.net/tx/pending',
     (url) => fetch(url).then((response) => response.json()),
-    { refreshInterval: 2000 },
+    { refreshInterval: 2 * 1000 },
   )
   const { data: blocks } = useSWR(
     ['listBlocks'],
@@ -40,7 +40,7 @@ export default function IndexPage() {
       } = await sdk.listBlocks({ first: 10 })
       return Promise.all(edges.map(({ node }) => arweave.blocks.get(node.id)))
     },
-    { refreshInterval: 2000 },
+    { refreshInterval: 10 * 1000 },
   )
   const { data: transactions } = useSWR(
     ['listTransactions'],
@@ -50,7 +50,7 @@ export default function IndexPage() {
       } = await sdk.listTransactions({ first: 10, blockMin: 1 })
       return edges.map(({ node }) => node)
     },
-    { refreshInterval: 2000 },
+    { refreshInterval: 10 * 1000 },
   )
   const size = useContext(ResponsiveContext)
 
@@ -132,16 +132,19 @@ export default function IndexPage() {
           </>
         ) : null}
       </Grid>
-      <Heading level="3">Latest blocks</Heading>
-      <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
+      <Heading level="3" color="dark-6">
+        Latest blocks
+      </Heading>
+      <Box height={{ min: 'medium' }} overflow={{ vertical: 'auto' }}>
         <DataTable
           primaryKey={false}
           columns={[
             { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
             {
-              property: 'timestamp',
-              render: (block) => <TimeAgo datetime={block.timestamp * 1000} />,
-              header: 'Timestamp',
+              property: 'txs',
+              render: (block) => formatNumber.format(block.txs.length),
+              header: 'Txs',
+              align: 'end',
             },
             {
               property: 'block_size',
@@ -154,22 +157,26 @@ export default function IndexPage() {
               align: 'end',
             },
             {
-              property: 'txs',
-              render: (block) => formatNumber.format(block.txs.length),
-              header: 'Txs',
+              property: 'timestamp',
+              render: (block) => <TimeAgo datetime={block.timestamp * 1000} />,
+              header: 'Timestamp',
               align: 'end',
             },
           ]}
           data={blocks}
           fill="vertical"
-          placeholder={blocks ? undefined : <DataTablePlaceholder />}
+          placeholder={
+            blocks?.length ? undefined : <DataTablePlaceholder empty={blocks?.length === 0} />
+          }
           onClickRow={({ datum: block }) => {
             history.push(`/block/${block.indep_hash}`)
           }}
         />
       </Box>
-      <Heading level="3">Latest transactions</Heading>
-      <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
+      <Heading level="3" color="dark-6">
+        Latest transactions
+      </Heading>
+      <Box height={{ min: 'medium' }} overflow={{ vertical: 'auto' }}>
         <TransactionsList value={transactions} relativeTime={true} />
       </Box>
     </Box>

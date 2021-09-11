@@ -25,9 +25,13 @@ export default function TransactionPage() {
     )
     return tag ? Arweave.utils.b64UrlToString(tag.value) : undefined
   }, [transaction?.tags])
-  const { data: owner } = useSWR(
-    transaction ? ['wallets', 'ownerToAddress', transaction] : null,
+  const { data: sender } = useSWR(
+    transaction ? ['wallets', 'ownerToAddress', transaction.owner] : null,
     () => arweave.wallets.ownerToAddress(transaction!.owner),
+  )
+  const { data: miner } = useSWR(
+    transaction ? ['wallets', 'ownerToAddress', transaction.signature] : null,
+    () => arweave.wallets.ownerToAddress(transaction!.signature),
   )
 
   if (!hash) {
@@ -35,18 +39,10 @@ export default function TransactionPage() {
   }
   return (
     <Box pad="medium" width={{ max: '940px', width: '100%' }} margin="0 auto">
-      <Heading level="3" margin={{ top: '0px' }}>
+      <Heading level="3" color="dark-6" margin={{ top: '0px' }}>
         Transaction
       </Heading>
       <Text>{transaction?.id || '-'}</Text>
-      <Heading level="3">Block</Heading>
-      <AnchorLink
-        to={`/block/${status?.confirmed?.block_indep_hash}`}
-        weight="normal"
-        color="light-1"
-      >
-        {status?.confirmed?.block_indep_hash || '-'}
-      </AnchorLink>
       <Grid
         rows={['100%']}
         columns={['1/3', '1/3', '1/3']}
@@ -58,7 +54,9 @@ export default function TransactionPage() {
         ]}
       >
         <Box gridArea="size">
-          <Heading level="3">{transaction?.target ? 'Amount' : 'Size'}</Heading>
+          <Heading level="3" color="dark-6">
+            {transaction?.target ? 'Amount' : 'Size'}
+          </Heading>
           <Text>
             {transaction
               ? transaction.target
@@ -68,7 +66,9 @@ export default function TransactionPage() {
           </Text>
         </Box>
         <Box gridArea="confirmations">
-          <Heading level="3">Confirmations</Heading>
+          <Heading level="3" color="dark-6">
+            Confirmations
+          </Heading>
           <Text>
             {status?.confirmed
               ? formatNumber.format(status?.confirmed?.number_of_confirmations)
@@ -76,27 +76,51 @@ export default function TransactionPage() {
           </Text>
         </Box>
         <Box gridArea="reward">
-          <Heading level="3">Reward</Heading>
+          <Heading level="3" color="dark-6">
+            Reward
+          </Heading>
           <Text>
             {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
           </Text>
         </Box>
       </Grid>
-      <Heading level="3">Owner</Heading>
-      <AnchorLink to={`/address/${owner}`} weight="normal" color="light-1">
-        {owner || '-'}
+      <Heading level="3" color="dark-6">
+        Block
+      </Heading>
+      <AnchorLink
+        to={`/block/${status?.confirmed?.block_indep_hash}`}
+        weight="normal"
+        color="light-1"
+      >
+        {status?.confirmed?.block_indep_hash || '-'}
+      </AnchorLink>
+      <Heading level="3" color="dark-6">
+        Sender
+      </Heading>
+      <AnchorLink to={`/address/${sender}`} weight="normal" color="light-1">
+        {sender || '-'}
+      </AnchorLink>
+      <Heading level="3" color="dark-6">
+        Miner
+      </Heading>
+      <AnchorLink to={`/address/${miner}`} weight="normal" color="light-1">
+        {miner || '-'}
       </AnchorLink>
       {transaction?.target ? (
         <>
-          <Heading level="3">Target</Heading>
+          <Heading level="3" color="dark-6">
+            Receiver
+          </Heading>
           <AnchorLink to={`/address/${transaction?.target}`} weight="normal" color="light-1">
             {transaction?.target || '-'}
           </AnchorLink>
         </>
       ) : (
         <>
-          <Heading level="3">Tags</Heading>
-          <Box height={transaction ? undefined : '73px'}>
+          <Heading level="3" color="dark-6">
+            Tags
+          </Heading>
+          <Box height={transaction ? undefined : 'small'}>
             <DataTable
               primaryKey={false}
               columns={[
@@ -113,10 +137,16 @@ export default function TransactionPage() {
               ]}
               data={transaction?.tags}
               fill="vertical"
-              placeholder={transaction ? undefined : <DataTablePlaceholder />}
+              placeholder={
+                transaction?.tags.length ? undefined : (
+                  <DataTablePlaceholder empty={transaction?.tags.length === 0} />
+                )
+              }
             />
           </Box>
-          <Heading level="3">Data</Heading>
+          <Heading level="3" color="dark-6">
+            Data
+          </Heading>
           {transaction && parseInt(transaction.data_size, 10) > 0 ? (
             <>
               <Anchor
