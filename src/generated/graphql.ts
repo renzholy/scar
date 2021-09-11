@@ -277,6 +277,8 @@ export type ListTransactionsQueryVariables = Exact<{
   first?: Maybe<Scalars['Int']>
   blockMin?: Maybe<Scalars['Int']>
   ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
+  owners?: Maybe<Array<Scalars['String']> | Scalars['String']>
+  recipients?: Maybe<Array<Scalars['String']> | Scalars['String']>
 }>
 
 export type ListTransactionsQuery = {
@@ -291,7 +293,7 @@ export type ListTransactionsQuery = {
         __typename?: 'Transaction'
         id: string
         recipient: string
-        block?: Maybe<{ __typename?: 'Block'; height: number }>
+        block?: Maybe<{ __typename?: 'Block'; height: number; id: string; timestamp: number }>
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
         quantity: { __typename?: 'Amount'; winston: string; ar: string }
@@ -321,8 +323,22 @@ export const ListBlocksDocument = gql`
   }
 `
 export const ListTransactionsDocument = gql`
-  query listTransactions($after: String, $first: Int = 100, $blockMin: Int, $ids: [ID!]) {
-    transactions(after: $after, first: $first, block: { min: $blockMin }, ids: $ids) {
+  query listTransactions(
+    $after: String
+    $first: Int = 100
+    $blockMin: Int
+    $ids: [ID!]
+    $owners: [String!]
+    $recipients: [String!]
+  ) {
+    transactions(
+      after: $after
+      first: $first
+      block: { min: $blockMin }
+      ids: $ids
+      owners: $owners
+      recipients: $recipients
+    ) {
       pageInfo {
         hasNextPage
       }
@@ -332,6 +348,8 @@ export const ListTransactionsDocument = gql`
           id
           block {
             height
+            id
+            timestamp
           }
           recipient
           owner {

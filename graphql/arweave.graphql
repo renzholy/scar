@@ -15,8 +15,22 @@ query listBlocks($after: String, $first: Int = 100) {
   }
 }
 
-query listTransactions($after: String, $first: Int = 100, $blockMin: Int, $ids: [ID!]) {
-  transactions(after: $after, first: $first, block: { min: $blockMin }, ids: $ids) {
+query listTransactions(
+  $after: String
+  $first: Int = 100
+  $blockMin: Int
+  $ids: [ID!]
+  $owners: [String!]
+  $recipients: [String!]
+) {
+  transactions(
+    after: $after
+    first: $first
+    block: { min: $blockMin }
+    ids: $ids
+    owners: $owners
+    recipients: $recipients
+  ) {
     pageInfo {
       hasNextPage
     }
@@ -26,6 +40,8 @@ query listTransactions($after: String, $first: Int = 100, $blockMin: Int, $ids: 
         id
         block {
           height
+          id
+          timestamp
         }
         recipient
         owner {
