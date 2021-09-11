@@ -1,5 +1,5 @@
 import { Anchor, Box, Nav, Spinner, TextInput } from 'grommet'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import * as Icon from 'grommet-icons'
 import useSWR from 'swr'
 import compact from 'lodash/compact'
@@ -29,9 +29,8 @@ export default function Layout(props: { children: ReactNode }) {
     },
     { revalidateOnFocus: false },
   )
-  const [suggestions, setSuggestions] = useState<{}[]>([])
-  useEffect(() => {
-    setSuggestions(
+  const suggestions = useMemo(
+    () =>
       data
         ? compact([
             data.block
@@ -48,8 +47,8 @@ export default function Layout(props: { children: ReactNode }) {
               : undefined,
           ])
         : [],
-    )
-  }, [data, keyword])
+    [data, keyword],
+  )
 
   return (
     <>
@@ -76,9 +75,6 @@ export default function Layout(props: { children: ReactNode }) {
               value={keyword}
               suggestions={suggestions}
               onChange={(e) => setKeyword(e.target.value)}
-              onSuggestionsClose={() => {
-                setSuggestions([])
-              }}
               onSuggestionSelect={(s) => {
                 history.push(s.suggestion.value)
                 setKeyword('')
