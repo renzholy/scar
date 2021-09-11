@@ -4,6 +4,7 @@ import Layout from './components/layout'
 import IndexPage from './pages/index'
 import BlockPage from './pages/block'
 import TransactionPage from './pages/tx'
+import AddressPage from './pages/address'
 
 export default function App() {
   return (
@@ -16,6 +17,9 @@ export default function App() {
             </Route>
             <Route path="/tx/:hash">
               <TransactionPage />
+            </Route>
+            <Route path="/address/:hash">
+              <AddressPage />
             </Route>
             <Route path="/" exact>
               <IndexPage />
