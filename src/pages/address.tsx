@@ -1,13 +1,35 @@
 import { Box, Heading, Text } from 'grommet'
 import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
+import TransactionsList from '../components/transactions-list'
 import { arweave } from '../utils/arweave'
 import { formatBalance } from '../utils/formatter'
+import { sdk } from '../utils/graphql'
 
 export default function AddressPage() {
   const { hash } = useParams<{ hash?: string }>()
   const { data: balance } = useSWR(hash ? ['wallets', 'getBalance', hash] : null, () =>
     arweave.wallets.getBalance(hash!),
+  )
+  const { data: sentTransactions } = useSWR(
+    hash ? ['listTransactions', 'owners', hash] : null,
+    async () => {
+      const {
+        transactions: { edges },
+      } = await sdk.listTransactions({ owners: [hash!] })
+      return edges.map(({ node }) => node)
+    },
+    { revalidateOnFocus: false },
+  )
+  const { data: receivedTransactions } = useSWR(
+    hash ? ['listTransactions', 'recipients', hash] : null,
+    async () => {
+      const {
+        transactions: { edges },
+      } = await sdk.listTransactions({ recipients: [hash!] })
+      return edges.map(({ node }) => node)
+    },
+    { revalidateOnFocus: false },
   )
 
   return (
@@ -18,6 +40,10 @@ export default function AddressPage() {
       <Text>{hash}</Text>
       <Heading level="3">Balance</Heading>
       <Text>{balance === undefined ? '-' : formatBalance(balance, 12)}&nbsp;AR</Text>
+      <Heading level="3">Sent transactions</Heading>
+      <TransactionsList value={sentTransactions} />
+      <Heading level="3">Received transactions</Heading>
+      <TransactionsList value={receivedTransactions} />
     </Box>
   )
 }
