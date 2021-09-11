@@ -12,11 +12,14 @@ import { sdk } from '../utils/graphql'
 export default function Index() {
   const router = useRouter()
   const { data: locations } = usePeersLocation({
-    refreshInterval: 30 * 1000,
     revalidateOnFocus: false,
   })
   const places = useMemo(
-    () => locations?.map((place) => ({ location: [place.lat, place.lon], color: 'accent-1' })),
+    () =>
+      locations?.map((place) => ({
+        location: [place.latitude, place.longitude],
+        color: 'accent-1',
+      })),
     [locations],
   )
   const { data: info } = useSWR(['getInfo'], () => arweave.network.getInfo(), {
