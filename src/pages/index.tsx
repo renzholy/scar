@@ -60,6 +60,7 @@ export default function IndexPage() {
       <Grid
         rows={size === 'small' ? ['1/2', '1/2'] : ['1/3', '1/3', '1/3']}
         columns={size === 'small' ? ['1/3', '1/3', '1/3'] : ['2/3', '16.66%', '16.66%']}
+        gap={size === 'small' ? { row: '10px' } : undefined}
         fill="vertical"
         areas={
           size === 'small'
