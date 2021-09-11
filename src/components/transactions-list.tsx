@@ -1,9 +1,10 @@
-import { DataTable, Text } from 'grommet'
+import { DataTable } from 'grommet'
 import prettyBytes from 'pretty-bytes'
 import { useHistory } from 'react-router'
 import TimeAgo from 'timeago-react'
 import { ListTransactionsQuery } from '../generated/graphql'
 import { formatNumber } from '../utils/formatter'
+import DataTablePlaceholder from './data-table-placeholder'
 
 export default function TransactionsList(props: {
   value?: ListTransactionsQuery['transactions']['edges'][0]['node'][]
@@ -14,16 +15,15 @@ export default function TransactionsList(props: {
 
   return (
     <DataTable
-      primaryKey="id"
+      primaryKey={false}
       columns={[
         {
           property: 'id',
-          render: (transaction) => (
-            <Text>
-              {transaction.id.substr(0, 8)}...
-              {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
-            </Text>
-          ),
+          render: (transaction) =>
+            `${transaction.id.substr(0, 8)}...${transaction.id.substr(
+              transaction.id.length - 8,
+              transaction.id.length,
+            )}`,
           header: 'Hash',
         },
         {
@@ -62,9 +62,7 @@ export default function TransactionsList(props: {
       ]}
       data={transactions}
       fill="vertical"
-      placeholder={
-        transactions ? (transactions.length ? undefined : 'No transactions') : 'Loading...'
-      }
+      placeholder={transactions ? undefined : <DataTablePlaceholder />}
       onClickRow={({ datum: transaction }) => {
         history.push(`/tx/${transaction.id}`)
       }}

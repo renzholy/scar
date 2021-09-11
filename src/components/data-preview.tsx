@@ -1,4 +1,4 @@
-import { Box, Text } from 'grommet'
+import { Box, Spinner } from 'grommet'
 import { useState } from 'react'
 
 export default function DataPreview(props: { id: string; type?: string }) {
@@ -14,7 +14,7 @@ export default function DataPreview(props: { id: string; type?: string }) {
       />
       {loaded ? null : (
         <Box fill={true} align="center" justify="center">
-          <Text>Loading...</Text>
+          <Spinner />
         </Box>
       )}
     </Box>

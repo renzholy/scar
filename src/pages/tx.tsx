@@ -8,6 +8,7 @@ import { formatBalance, formatNumber } from '../utils/formatter'
 import DataPreview from '../components/data-preview'
 import { arweave, Arweave } from '../utils/arweave'
 import AnchorLink from '../components/anchor-link'
+import DataTablePlaceholder from '../components/data-table-placeholder'
 
 export default function TransactionPage() {
   const { hash } = useParams<{ hash?: string }>()
@@ -97,7 +98,7 @@ export default function TransactionPage() {
           <Heading level="3">Tags</Heading>
           <Box height={transaction ? undefined : '73px'}>
             <DataTable
-              primaryKey="name"
+              primaryKey={false}
               columns={[
                 {
                   property: 'name',
@@ -112,7 +113,7 @@ export default function TransactionPage() {
               ]}
               data={transaction?.tags}
               fill="vertical"
-              placeholder={transaction ? undefined : 'Loading...'}
+              placeholder={transaction ? undefined : <DataTablePlaceholder />}
             />
           </Box>
           <Heading level="3">Data</Heading>

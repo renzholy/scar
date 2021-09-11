@@ -9,6 +9,7 @@ import { formatNumber } from '../utils/formatter'
 import { arweave } from '../utils/arweave'
 import { sdk } from '../utils/graphql'
 import TransactionsList from '../components/transactions-list'
+import DataTablePlaceholder from '../components/data-table-placeholder'
 
 export default function IndexPage() {
   const history = useHistory()
@@ -134,7 +135,7 @@ export default function IndexPage() {
       <Heading level="3">Latest blocks</Heading>
       <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
         <DataTable
-          primaryKey="indep_hash"
+          primaryKey={false}
           columns={[
             { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
             {
@@ -161,7 +162,7 @@ export default function IndexPage() {
           ]}
           data={blocks}
           fill="vertical"
-          placeholder={blocks ? undefined : 'Loading...'}
+          placeholder={blocks ? undefined : <DataTablePlaceholder />}
           onClickRow={({ datum: block }) => {
             history.push(`/block/${block.indep_hash}`)
           }}
