@@ -19,22 +19,22 @@ export type Scalars = {
 /** Representation of a value transfer between wallets, in both winson and ar. */
 export type Amount = {
   __typename?: 'Amount'
-  /** Amount as a winston string e.g. \`"1000000000000"\`. */
-  winston: Scalars['String']
   /** Amount as an AR string e.g. \`"0.000000000001"\`. */
   ar: Scalars['String']
+  /** Amount as a winston string e.g. \`"1000000000000"\`. */
+  winston: Scalars['String']
 }
 
 export type Block = {
   __typename?: 'Block'
-  /** The block ID. */
-  id: Scalars['ID']
-  /** The block timestamp (UTC). */
-  timestamp: Scalars['Int']
   /** The block height. */
   height: Scalars['Int']
+  /** The block ID. */
+  id: Scalars['ID']
   /** The previous block ID. */
   previous: Scalars['ID']
+  /** The block timestamp (UTC). */
+  timestamp: Scalars['Int']
 }
 
 /**
@@ -43,8 +43,8 @@ export type Block = {
  */
 export type BlockConnection = {
   __typename?: 'BlockConnection'
-  pageInfo: PageInfo
   edges: Array<BlockEdge>
+  pageInfo: PageInfo
 }
 
 /** Paginated result set using the GraphQL cursor spec. */
@@ -62,10 +62,10 @@ export type BlockEdge = {
 
 /** Find blocks within a given range */
 export type BlockFilter = {
-  /** Minimum block height to filter from */
-  min?: Maybe<Scalars['Int']>
   /** Maximum block height to filter to */
   max?: Maybe<Scalars['Int']>
+  /** Minimum block height to filter from */
+  min?: Maybe<Scalars['Int']>
 }
 
 /**
@@ -79,8 +79,8 @@ export type Bundle = {
 }
 
 export enum CacheControlScope {
-  Public = 'PUBLIC',
   Private = 'PRIVATE',
+  Public = 'PUBLIC',
 }
 
 /** Basic metadata about the transaction data payload. */
@@ -118,28 +118,12 @@ export type Parent = {
 
 export type Query = {
   __typename?: 'Query'
+  block?: Maybe<Block>
+  blocks: BlockConnection
   /** Get a transaction by its id */
   transaction?: Maybe<Transaction>
   /** Get a paginated set of matching transactions using filters. */
   transactions: TransactionConnection
-  block?: Maybe<Block>
-  blocks: BlockConnection
-}
-
-export type QueryTransactionArgs = {
-  id: Scalars['ID']
-}
-
-export type QueryTransactionsArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>
-  owners?: Maybe<Array<Scalars['String']>>
-  recipients?: Maybe<Array<Scalars['String']>>
-  tags?: Maybe<Array<TagFilter>>
-  bundledIn?: Maybe<Array<Scalars['ID']>>
-  block?: Maybe<BlockFilter>
-  first?: Maybe<Scalars['Int']>
-  after?: Maybe<Scalars['String']>
-  sort?: Maybe<SortOrder>
 }
 
 export type QueryBlockArgs = {
@@ -147,11 +131,27 @@ export type QueryBlockArgs = {
 }
 
 export type QueryBlocksArgs = {
-  ids?: Maybe<Array<Scalars['ID']>>
-  height?: Maybe<BlockFilter>
-  first?: Maybe<Scalars['Int']>
   after?: Maybe<Scalars['String']>
+  first?: Maybe<Scalars['Int']>
+  height?: Maybe<BlockFilter>
+  ids?: Maybe<Array<Scalars['ID']>>
   sort?: Maybe<SortOrder>
+}
+
+export type QueryTransactionArgs = {
+  id: Scalars['ID']
+}
+
+export type QueryTransactionsArgs = {
+  after?: Maybe<Scalars['String']>
+  block?: Maybe<BlockFilter>
+  bundledIn?: Maybe<Array<Scalars['ID']>>
+  first?: Maybe<Scalars['Int']>
+  ids?: Maybe<Array<Scalars['ID']>>
+  owners?: Maybe<Array<Scalars['String']>>
+  recipients?: Maybe<Array<Scalars['String']>>
+  sort?: Maybe<SortOrder>
+  tags?: Maybe<Array<TagFilter>>
 }
 
 /** Optionally reverse the result sort order from `HEIGHT_DESC` (default) to `HEIGHT_ASC`. */
@@ -174,6 +174,8 @@ export type Tag = {
 export type TagFilter = {
   /** The tag name */
   name: Scalars['String']
+  /** The operator to apply to to the tag filter. Defaults to EQ (equal). */
+  op?: Maybe<TagOperator>
   /**
    * An array of values to match against. If multiple values are passed then transactions with _any_ matching tag value from the set will be returned.
    *
@@ -188,8 +190,6 @@ export type TagFilter = {
    * Returns all transactions where the \`app-name\` tag has a value of either \`app-1\` _or_ \`app-2\` _or_ \`app-3\`.
    */
   values: Array<Scalars['String']>
-  /** The operator to apply to to the tag filter. Defaults to EQ (equal). */
-  op?: Maybe<TagOperator>
 }
 
 /** The operator to apply to a tag value. */
@@ -202,27 +202,27 @@ export enum TagOperator {
 
 export type Transaction = {
   __typename?: 'Transaction'
-  id: Scalars['ID']
   anchor: Scalars['String']
-  signature: Scalars['String']
-  recipient: Scalars['String']
-  owner: Owner
-  fee: Amount
-  quantity: Amount
-  data: MetaData
-  tags: Array<Tag>
   /** Transactions with a null block are recent and unconfirmed, if they aren't mined into a block within 60 minutes they will be removed from results. */
   block?: Maybe<Block>
-  /**
-   * Transactions with parent are Bundled Data Items as defined in the ANS-102 data spec. https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md
-   * @deprecated Use `bundledIn`
-   */
-  parent?: Maybe<Parent>
   /**
    * For bundled data items this references the containing bundle ID.
    * See: https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md
    */
   bundledIn?: Maybe<Bundle>
+  data: MetaData
+  fee: Amount
+  id: Scalars['ID']
+  owner: Owner
+  /**
+   * Transactions with parent are Bundled Data Items as defined in the ANS-102 data spec. https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md
+   * @deprecated Use `bundledIn`
+   */
+  parent?: Maybe<Parent>
+  quantity: Amount
+  recipient: Scalars['String']
+  signature: Scalars['String']
+  tags: Array<Tag>
 }
 
 /**
@@ -231,8 +231,8 @@ export type Transaction = {
  */
 export type TransactionConnection = {
   __typename?: 'TransactionConnection'
-  pageInfo: PageInfo
   edges: Array<TransactionEdge>
+  pageInfo: PageInfo
 }
 
 /** Paginated result set using the GraphQL cursor spec. */
