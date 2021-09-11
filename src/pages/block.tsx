@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import AnchorLink from '../components/anchor-link'
 import TransactionsList from '../components/transactions-list'
 import { arweave } from '../utils/arweave'
+import { formatTime } from '../utils/formatter'
 import { sdk } from '../utils/graphql'
 
 export default function BlockPage() {
@@ -71,7 +72,7 @@ export default function BlockPage() {
           <Heading level="3" color="dark-6">
             Timestamp
           </Heading>
-          <Text>{block ? new Date(block.timestamp * 1000).toLocaleString() : '-'}</Text>
+          <Text>{block ? formatTime(new Date(block.timestamp * 1000)) : '-'}</Text>
         </Box>
       </Grid>
       <Heading level="3" color="dark-6">

@@ -90,13 +90,13 @@ export default function IndexPage() {
           <>
             <Box gridArea="peers" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
-                {formatNumber.format(info.peers)}
+                {formatNumber(info.peers)}
               </Heading>
               <Text color="dark-6">Peers</Text>
             </Box>
             <Box gridArea="blocks" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
-                {formatNumber.format(info.blocks)}
+                {formatNumber(info.blocks)}
               </Heading>
               <Text color="dark-6">Blocks</Text>
             </Box>
@@ -113,19 +113,19 @@ export default function IndexPage() {
             </Box>
             <Box gridArea="queue" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
-                {formatNumber.format(info.queue_length)}
+                {formatNumber(info.queue_length)}
               </Heading>
               <Text color="dark-6">Queue</Text>
             </Box>
             <Box gridArea="latency" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
-                {formatNumber.format(info.node_state_latency)}
+                {formatNumber(info.node_state_latency)}
               </Heading>
               <Text color="dark-6">Latency</Text>
             </Box>
             <Box gridArea="pendings" align={size === 'small' ? 'center' : 'end'}>
               <Heading level="3" margin="0">
-                {pendings ? formatNumber.format(pendings.length) : '-'}
+                {pendings ? formatNumber(pendings.length) : '-'}
               </Heading>
               <Text color="dark-6">Pendings</Text>
             </Box>
@@ -142,7 +142,7 @@ export default function IndexPage() {
             { property: 'height', render: (block) => `#${block.height}`, header: 'Height' },
             {
               property: 'txs',
-              render: (block) => formatNumber.format(block.txs.length),
+              render: (block) => formatNumber(block.txs.length),
               header: 'Txs',
               align: 'end',
             },

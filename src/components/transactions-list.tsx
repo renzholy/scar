@@ -3,7 +3,7 @@ import prettyBytes from 'pretty-bytes'
 import { useHistory } from 'react-router'
 import TimeAgo from 'timeago-react'
 import { ListTransactionsQuery } from '../generated/graphql'
-import { formatNumber } from '../utils/formatter'
+import { formatNumber, formatTime } from '../utils/formatter'
 import DataTablePlaceholder from './data-table-placeholder'
 
 export default function TransactionsList(props: {
@@ -36,7 +36,7 @@ export default function TransactionsList(props: {
           property: 'data.size',
           render: (transaction) =>
             transaction.recipient
-              ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
+              ? `${formatNumber(parseFloat(transaction.quantity.ar))} AR`
               : prettyBytes(parseInt(transaction.data.size, 10), {
                   locale: true,
                   binary: true,
@@ -51,7 +51,7 @@ export default function TransactionsList(props: {
               props.relativeTime ? (
                 <TimeAgo datetime={transaction.block.timestamp * 1000} />
               ) : (
-                new Date(transaction.block.timestamp * 1000).toLocaleString()
+                formatTime(new Date(transaction.block.timestamp * 1000))
               )
             ) : (
               'Pending'

@@ -65,18 +65,14 @@ export default function TransactionPage() {
           <Heading level="3" color="dark-6">
             Reward
           </Heading>
-          <Text>
-            {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
-          </Text>
+          <Text>{transaction ? formatNumber(parseInt(transaction.reward, 10)) : '-'} winston</Text>
         </Box>
         <Box gridArea="confirmations">
           <Heading level="3" color="dark-6">
             Confirmations
           </Heading>
           <Text>
-            {status?.confirmed
-              ? formatNumber.format(status?.confirmed?.number_of_confirmations)
-              : '-'}
+            {status?.confirmed ? formatNumber(status?.confirmed?.number_of_confirmations) : '-'}
           </Text>
         </Box>
       </Grid>
