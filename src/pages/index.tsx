@@ -8,6 +8,7 @@ import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
 import { arweave } from '../utils/arweave'
 import { sdk } from '../utils/graphql'
+import TransactionsList from '../components/transactions-list'
 
 export default function IndexPage() {
   const history = useHistory()
@@ -168,61 +169,7 @@ export default function IndexPage() {
       </Box>
       <Heading level="3">Latest transactions</Heading>
       <Box height={{ min: '397px' }} overflow={{ vertical: 'auto' }}>
-        <DataTable
-          primaryKey="id"
-          columns={[
-            {
-              property: 'id',
-              render: (transaction) => (
-                <Text>
-                  {transaction.id.substr(0, 8)}...
-                  {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
-                </Text>
-              ),
-              header: 'Hash',
-            },
-            {
-              property: 'data.type',
-              header: 'Type',
-              render: (transaction) => (
-                <Text>{transaction.recipient ? '[transfer]' : transaction.data.type || '-'}</Text>
-              ),
-            },
-            {
-              property: 'data.size',
-              render: (transaction) => (
-                <Text>
-                  {transaction.recipient
-                    ? ''
-                    : prettyBytes(parseInt(transaction.data.size, 10), {
-                        locale: true,
-                        binary: true,
-                      })}
-                </Text>
-              ),
-              align: 'end',
-              header: 'Size',
-            },
-            {
-              property: 'fee.ar',
-              render: (transaction) => (
-                <Text>
-                  {transaction.recipient
-                    ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
-                    : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
-                </Text>
-              ),
-              align: 'end',
-              header: 'Reward',
-            },
-          ]}
-          data={transactions}
-          fill="vertical"
-          placeholder={transactions ? undefined : 'Loading...'}
-          onClickRow={({ datum: transaction }) => {
-            history.push(`/tx/${transaction.id}`)
-          }}
-        />
+        <TransactionsList value={transactions} relativeTime={true} />
       </Box>
     </Box>
   )

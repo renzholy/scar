@@ -1,13 +1,12 @@
-import { Box, DataTable, Grid, Heading, Text } from 'grommet'
+import { Box, Grid, Heading, Text } from 'grommet'
 import prettyBytes from 'pretty-bytes'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import useSWR from 'swr'
+import TransactionsList from '../components/transactions-list'
 import { arweave } from '../utils/arweave'
-import { formatNumber } from '../utils/formatter'
 import { sdk } from '../utils/graphql'
 
 export default function BlockPage() {
-  const history = useHistory()
   const { hash } = useParams<{ hash?: string }>()
   const { data: block } = useSWR(hash ? ['blocks', 'get', hash] : null, () =>
     arweave.blocks.get(hash!),
@@ -63,66 +62,11 @@ export default function BlockPage() {
         </Box>
       </Grid>
       <Heading level="3">Transactions</Heading>
-      <Box height={transactions && transactions.length ? undefined : '73px'}>
-        <DataTable
-          primaryKey="id"
-          columns={[
-            {
-              property: 'id',
-              render: (transaction) => (
-                <Text truncate={true}>
-                  {transaction.id.substr(0, 8)}...
-                  {transaction.id.substr(transaction.id.length - 8, transaction.id.length)}
-                </Text>
-              ),
-              header: 'Hash',
-            },
-            {
-              property: 'data.type',
-              header: 'Type',
-              render: (transaction) => (
-                <Text truncate={true}>
-                  {transaction.recipient ? '[transfer]' : transaction.data.type || '-'}
-                </Text>
-              ),
-            },
-            {
-              property: 'data.size',
-              render: (transaction) => (
-                <Text truncate={true}>
-                  {transaction.recipient
-                    ? ''
-                    : prettyBytes(parseInt(transaction.data.size, 10), {
-                        locale: true,
-                        binary: true,
-                      })}
-                </Text>
-              ),
-              align: 'end',
-              header: 'Size',
-            },
-            {
-              property: 'fee.ar',
-              render: (transaction) => (
-                <Text truncate={true}>
-                  {transaction.recipient
-                    ? `${formatNumber.format(parseFloat(transaction.quantity.ar))} AR`
-                    : `${formatNumber.format(parseInt(transaction.fee.winston, 10))} w`}
-                </Text>
-              ),
-              align: 'end',
-              header: 'Reward',
-            },
-          ]}
-          data={transactions}
-          fill="vertical"
-          placeholder={
-            transactions ? (transactions.length ? undefined : 'No transactions') : 'Loading...'
-          }
-          onClickRow={({ datum: transaction }) => {
-            history.push(`/tx/${transaction.id}`)
-          }}
-        />
+      <Box
+        height={transactions && transactions.length ? undefined : '73px'}
+        overflow={{ vertical: 'auto' }}
+      >
+        <TransactionsList value={transactions} />
       </Box>
     </Box>
   )

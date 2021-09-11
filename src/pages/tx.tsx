@@ -4,7 +4,7 @@ import prettyBytes from 'pretty-bytes'
 import Transaction from 'arweave/node/lib/transaction'
 import { useMemo } from 'react'
 import { useParams } from 'react-router'
-import { formatNumber } from '../utils/formatter'
+import { formatBalance, formatNumber } from '../utils/formatter'
 import DataPreview from '../components/data-preview'
 import { arweave, Arweave } from '../utils/arweave'
 import AnchorLink from '../components/anchor-link'
@@ -24,6 +24,10 @@ export default function TransactionPage() {
     )
     return tag ? Arweave.utils.b64UrlToString(tag.value) : undefined
   }, [transaction?.tags])
+  const { data: owner } = useSWR(
+    transaction ? ['wallets', 'ownerToAddress', transaction] : null,
+    () => arweave.wallets.ownerToAddress(transaction!.owner),
+  )
 
   if (!hash) {
     return null
@@ -35,21 +39,33 @@ export default function TransactionPage() {
       </Heading>
       <Text>{transaction?.id || '-'}</Text>
       <Heading level="3">Block</Heading>
-      <AnchorLink to={`/block/${status?.confirmed?.block_indep_hash}`}>
-        <Anchor weight="normal" color="light-1">
-          {status?.confirmed?.block_indep_hash || '-'}
-        </Anchor>
+      <AnchorLink
+        to={`/block/${status?.confirmed?.block_indep_hash}`}
+        weight="normal"
+        color="light-1"
+      >
+        {status?.confirmed?.block_indep_hash || '-'}
       </AnchorLink>
       <Grid
         rows={['100%']}
         columns={['1/3', '1/3', '1/3']}
         fill="vertical"
         areas={[
-          { name: 'confirmations', start: [0, 0], end: [0, 0] },
-          { name: 'reward', start: [1, 0], end: [1, 0] },
-          { name: 'size', start: [2, 0], end: [2, 0] },
+          { name: 'size', start: [0, 0], end: [0, 0] },
+          { name: 'confirmations', start: [1, 0], end: [1, 0] },
+          { name: 'reward', start: [2, 0], end: [2, 0] },
         ]}
       >
+        <Box gridArea="size">
+          <Heading level="3">{transaction?.target ? 'Amount' : 'Size'}</Heading>
+          <Text>
+            {transaction
+              ? transaction.target
+                ? `${formatBalance(transaction.quantity, 12)} AR`
+                : prettyBytes(parseInt(transaction.data_size, 10), { locale: true, binary: true })
+              : '-'}
+          </Text>
+        </Box>
         <Box gridArea="confirmations">
           <Heading level="3">Confirmations</Heading>
           <Text>
@@ -64,52 +80,59 @@ export default function TransactionPage() {
             {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
           </Text>
         </Box>
-        <Box gridArea="size">
-          <Heading level="3">Size</Heading>
-          <Text>
-            {transaction
-              ? prettyBytes(parseInt(transaction.data_size, 10), { locale: true, binary: true })
-              : '-'}
-          </Text>
-        </Box>
       </Grid>
-      <Heading level="3">Tags</Heading>
-      <Box height={transaction ? undefined : '73px'}>
-        <DataTable
-          primaryKey="name"
-          columns={[
-            {
-              property: 'name',
-              render: (tag) => Arweave.utils.b64UrlToString(tag.name),
-              header: 'Name',
-            },
-            {
-              property: 'value',
-              render: (tag) => Arweave.utils.b64UrlToString(tag.value),
-              header: 'Value',
-            },
-          ]}
-          data={transaction?.tags}
-          fill="vertical"
-          placeholder={transaction ? undefined : 'Loading...'}
-        />
-      </Box>
-      <Heading level="3">Data</Heading>
-      {transaction && parseInt(transaction.data_size, 10) > 0 ? (
+      <Heading level="3">Owner</Heading>
+      <AnchorLink to={`/address/${owner}`} weight="normal" color="light-1">
+        {owner || '-'}
+      </AnchorLink>
+      {transaction?.target ? (
         <>
-          <Anchor
-            href={`https://arweave.net/${transaction.id}`}
-            target="_blank"
-            weight="normal"
-            margin={{ bottom: 'medium' }}
-            color="light-1"
-          >
-            https://arweave.net/{transaction.id}
-          </Anchor>
-          <DataPreview id={transaction.id} type={type} />
+          <Heading level="3">Target</Heading>
+          <AnchorLink to={`/address/${transaction?.target}`} weight="normal" color="light-1">
+            {transaction?.target || '-'}
+          </AnchorLink>
         </>
       ) : (
-        <Text>No data</Text>
+        <>
+          <Heading level="3">Tags</Heading>
+          <Box height={transaction ? undefined : '73px'}>
+            <DataTable
+              primaryKey="name"
+              columns={[
+                {
+                  property: 'name',
+                  render: (tag) => Arweave.utils.b64UrlToString(tag.name),
+                  header: 'Name',
+                },
+                {
+                  property: 'value',
+                  render: (tag) => Arweave.utils.b64UrlToString(tag.value),
+                  header: 'Value',
+                },
+              ]}
+              data={transaction?.tags}
+              fill="vertical"
+              placeholder={transaction ? undefined : 'Loading...'}
+            />
+          </Box>
+          <Heading level="3">Data</Heading>
+          {transaction && parseInt(transaction.data_size, 10) > 0 ? (
+            <>
+              <Anchor
+                href={`https://arweave.net/${transaction.id}`}
+                target="_blank"
+                weight="normal"
+                margin={{ bottom: 'medium' }}
+                color="light-1"
+              >
+                https://arweave.net/{transaction.id}
+              </Anchor>
+              <DataPreview id={transaction.id} type={type} />
+            </>
+          ) : (
+            <Text>No data</Text>
+          )}
+        </>
       )}
     </Box>
   )
