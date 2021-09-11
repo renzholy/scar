@@ -10,21 +10,25 @@ import AnchorLink from './anchor-link'
 export default function Layout(props: { children: ReactNode }) {
   const history = useHistory()
   const [keyword, setKeyword] = useState('')
-  const { data, isValidating } = useSWR(keyword ? ['search', keyword] : null, async () => {
-    try {
-      const [block, transaction, address] = await Promise.all([
-        arweave.blocks.get(keyword).catch(() => undefined),
-        arweave.transactions.get(keyword).catch(() => undefined),
-        arweave.wallets
-          .getBalance(keyword)
-          .then((balance) => (balance === '0' || !/^\d+$/.test(balance) ? undefined : balance))
-          .catch(() => undefined),
-      ])
-      return { transaction, block, address }
-    } catch {
-      return undefined
-    }
-  })
+  const { data, isValidating } = useSWR(
+    keyword ? ['search', keyword] : null,
+    async () => {
+      try {
+        const [block, transaction, address] = await Promise.all([
+          arweave.blocks.get(keyword).catch(() => undefined),
+          arweave.transactions.get(keyword).catch(() => undefined),
+          arweave.wallets
+            .getBalance(keyword)
+            .then((balance) => (balance === '0' || !/^\d+$/.test(balance) ? undefined : balance))
+            .catch(() => undefined),
+        ])
+        return { transaction, block, address }
+      } catch {
+        return undefined
+      }
+    },
+    { revalidateOnFocus: false },
+  )
   const suggestions = useMemo(
     () =>
       data
@@ -42,7 +46,7 @@ export default function Layout(props: { children: ReactNode }) {
               ? { label: `Address: ${keyword}`, value: `/address/${keyword}` }
               : undefined,
           ])
-        : undefined,
+        : [],
     [data, keyword],
   )
 
