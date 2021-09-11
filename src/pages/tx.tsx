@@ -51,11 +51,21 @@ export default function TransactionPage() {
         columns={['1/3', '1/3', '1/3']}
         fill="vertical"
         areas={[
-          { name: 'confirmations', start: [0, 0], end: [0, 0] },
-          { name: 'reward', start: [1, 0], end: [1, 0] },
-          { name: 'size', start: [2, 0], end: [2, 0] },
+          { name: 'size', start: [0, 0], end: [0, 0] },
+          { name: 'confirmations', start: [1, 0], end: [1, 0] },
+          { name: 'reward', start: [2, 0], end: [2, 0] },
         ]}
       >
+        <Box gridArea="size">
+          <Heading level="3">{transaction?.target ? 'Amount' : 'Size'}</Heading>
+          <Text>
+            {transaction
+              ? transaction.target
+                ? `${formatBalance(transaction.quantity, 12)} AR`
+                : prettyBytes(parseInt(transaction.data_size, 10), { locale: true, binary: true })
+              : '-'}
+          </Text>
+        </Box>
         <Box gridArea="confirmations">
           <Heading level="3">Confirmations</Heading>
           <Text>
@@ -70,14 +80,6 @@ export default function TransactionPage() {
             {transaction ? formatNumber.format(parseInt(transaction.reward, 10)) : '-'} winston
           </Text>
         </Box>
-        <Box gridArea="size">
-          <Heading level="3">Size</Heading>
-          <Text>
-            {transaction
-              ? prettyBytes(parseInt(transaction.data_size, 10), { locale: true, binary: true })
-              : '-'}
-          </Text>
-        </Box>
       </Grid>
       <Heading level="3">Owner</Heading>
       <AnchorLink to={`/address/${owner}`} weight="normal" color="light-1">
@@ -89,8 +91,6 @@ export default function TransactionPage() {
           <AnchorLink to={`/address/${transaction?.target}`} weight="normal" color="light-1">
             {transaction?.target || '-'}
           </AnchorLink>
-          <Heading level="3">Amount</Heading>
-          <Text>{formatBalance(transaction.quantity, 12)} AR</Text>
         </>
       ) : (
         <>
