@@ -120,7 +120,7 @@ export default function BlockPage() {
             transactions ? (transactions.length ? undefined : 'No transactions') : 'Loading...'
           }
           onClickRow={({ datum: transaction }) => {
-            router.push(`/tx/${transaction.id}`)
+            router.push(`/tx/${transaction.id}`, undefined, { shallow: true })
           }}
         />
       </Box>

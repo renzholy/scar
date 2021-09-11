@@ -36,7 +36,7 @@ export default function TransactionPage() {
       </Heading>
       <Text>{transaction?.id || '-'}</Text>
       <Heading level="3">Block</Heading>
-      <Link href={`/block/${status?.confirmed?.block_indep_hash}`} passHref={true}>
+      <Link href={`/block/${status?.confirmed?.block_indep_hash}`} passHref={true} shallow={true}>
         <Anchor weight="normal" color="light-1">
           {status?.confirmed?.block_indep_hash || '-'}
         </Anchor>

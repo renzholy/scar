@@ -158,7 +158,7 @@ export default function Index() {
           fill="vertical"
           placeholder={blocks ? undefined : 'Loading...'}
           onClickRow={({ datum: block }) => {
-            router.push(`/block/${block.indep_hash}`)
+            router.push(`/block/${block.indep_hash}`, undefined, { shallow: true })
           }}
         />
       </Box>
@@ -216,7 +216,7 @@ export default function Index() {
           fill="vertical"
           placeholder={transactions ? undefined : 'Loading...'}
           onClickRow={({ datum: transaction }) => {
-            router.push(`/tx/${transaction.id}`)
+            router.push(`/tx/${transaction.id}`, undefined, { shallow: true })
           }}
         />
       </Box>

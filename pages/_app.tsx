@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             justify="between"
           >
             <Box width="min-content">
-              <Link href="/" passHref={true}>
+              <Link href="/" passHref={true} shallow={true}>
                 <Anchor color="light-1">SCAR</Anchor>
               </Link>
             </Box>
