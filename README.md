@@ -1,6 +1,6 @@
 # Scar
 
-An Arweave Explorer
+An Arweave Explorer and Toolkit on the Permaweb.
 
 Available on:
 
@@ -11,14 +11,14 @@ Available on:
 
 Features:
 
-- [x] : world map of arweave peers
-- [x] : search bar for block, transaction and address
-- [x] : block list, block detail
-- [x] : transaction list, transaction detail
-- [x] : rich content preview (based on content-type tag)
-- [ ] : tokens list
-- [ ] : arweave graphql query builder
-- [ ] : smartweave interface
-- [ ] : more responsive layout
-- [ ] : storage price calculator
-- [ ] : i18n
+- [x] world map of peers
+- [x] search bar for block, transaction and address
+- [x] block list, block detail
+- [x] transaction list, transaction detail
+- [x] rich content preview (based on content-type tag)
+- [ ] tokens list
+- [ ] smartweave IDE
+- [ ] advanced search with arweave graphql query builder
+- [ ] more responsive layout
+- [ ] storage price calculator
+- [ ] i18n
