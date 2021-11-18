@@ -1,6 +1,6 @@
 import { DataTable } from 'grommet'
 import prettyBytes from 'pretty-bytes'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import TimeAgo from 'timeago-react'
 import { ListTransactionsQuery } from '../generated/graphql'
 import { formatNumber, formatTime } from '../utils/formatter'
@@ -11,7 +11,7 @@ export default function TransactionsList(props: {
   relativeTime?: boolean
 }) {
   const { value: transactions } = props
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <DataTable
@@ -68,7 +68,7 @@ export default function TransactionsList(props: {
         )
       }
       onClickRow={({ datum: transaction }) => {
-        history.push(`/tx/${transaction.id}`)
+        navigate(`/tx/${transaction.id}`)
       }}
     />
   )

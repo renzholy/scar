@@ -7,7 +7,7 @@ import { formatBalance } from '../utils/formatter'
 import { sdk } from '../utils/graphql'
 
 export default function AddressPage() {
-  const { hash } = useParams<{ hash?: string }>()
+  const { hash } = useParams<'hash'>()
   const { data: balance } = useSWR(hash ? ['wallets', 'getBalance', hash] : null, () =>
     arweave.wallets.getBalance(hash!),
   )

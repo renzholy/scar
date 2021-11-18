@@ -1,4 +1,4 @@
-import { HashRouter, Switch, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import { grommet, Grommet } from 'grommet'
 import Layout from './components/layout'
 import IndexPage from './pages/index'
@@ -11,20 +11,12 @@ export default function App() {
     <Grommet theme={grommet} themeMode="dark">
       <HashRouter>
         <Layout>
-          <Switch>
-            <Route path="/block/:hash">
-              <BlockPage />
-            </Route>
-            <Route path="/tx/:hash">
-              <TransactionPage />
-            </Route>
-            <Route path="/address/:hash">
-              <AddressPage />
-            </Route>
-            <Route path="/" exact>
-              <IndexPage />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path="/block/:hash" element={<BlockPage />} />
+            <Route path="/tx/:hash" element={<TransactionPage />} />
+            <Route path="/address/:hash" element={<AddressPage />}></Route>
+            <Route path="/" element={<IndexPage />} />
+          </Routes>
         </Layout>
       </HashRouter>
     </Grommet>

@@ -11,7 +11,7 @@ import AnchorLink from '../components/anchor-link'
 import DataTablePlaceholder from '../components/data-table-placeholder'
 
 export default function TransactionPage() {
-  const { hash } = useParams<{ hash?: string }>()
+  const { hash } = useParams<'hash'>()
   const { data: status } = useSWR(hash ? ['transactions', 'getStatus', hash] : null, () =>
     arweave.transactions.getStatus(hash!),
   )

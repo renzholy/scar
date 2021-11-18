@@ -10,7 +10,7 @@ import { formatTime } from '../utils/formatter'
 import { sdk } from '../utils/graphql'
 
 export default function BlockPage() {
-  const { hash } = useParams<{ hash?: string }>()
+  const { hash } = useParams<'hash'>()
   const { data: block } = useSWR(hash ? ['blocks', 'get', hash] : null, () =>
     arweave.blocks.get(hash!),
   )

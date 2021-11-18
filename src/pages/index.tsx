@@ -3,7 +3,7 @@ import { useContext, useMemo } from 'react'
 import { Box, DataTable, Grid, Heading, ResponsiveContext, Text, WorldMap } from 'grommet'
 import TimeAgo from 'timeago-react'
 import prettyBytes from 'pretty-bytes'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import usePeersLocation from '../hooks/use-peers-location'
 import { formatNumber } from '../utils/formatter'
 import { arweave } from '../utils/arweave'
@@ -12,7 +12,7 @@ import TransactionsList from '../components/transactions-list'
 import DataTablePlaceholder from '../components/data-table-placeholder'
 
 export default function IndexPage() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { data: locations } = usePeersLocation({
     revalidateOnFocus: false,
   })
@@ -169,7 +169,7 @@ export default function IndexPage() {
             blocks?.length ? undefined : <DataTablePlaceholder empty={blocks?.length === 0} />
           }
           onClickRow={({ datum: block }) => {
-            history.push(`/block/${block.indep_hash}`)
+            navigate(`/block/${block.indep_hash}`)
           }}
         />
       </Box>

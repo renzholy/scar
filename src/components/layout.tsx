@@ -3,12 +3,12 @@ import { ReactNode, useMemo, useState } from 'react'
 import * as Icon from 'grommet-icons'
 import useSWR from 'swr'
 import compact from 'lodash/compact'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 import { arweave } from '../utils/arweave'
 import AnchorLink from './anchor-link'
 
 export default function Layout(props: { children: ReactNode }) {
-  const history = useHistory()
+  const navigate = useNavigate()
   const [keyword, setKeyword] = useState('')
   const { data, isValidating } = useSWR(
     keyword ? ['search', keyword] : null,
@@ -76,7 +76,7 @@ export default function Layout(props: { children: ReactNode }) {
               suggestions={suggestions}
               onChange={(e) => setKeyword(e.target.value)}
               onSuggestionSelect={(s) => {
-                history.push(s.suggestion.value)
+                navigate(s.suggestion.value)
               }}
             />
           </Box>
