@@ -2,6 +2,7 @@ import { GraphQLClient } from 'graphql-request'
 import * as Dom from 'graphql-request/dist/types.dom'
 import gql from 'graphql-tag'
 export type Maybe<T> = T | null
+export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> }
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> }
@@ -12,8 +13,6 @@ export type Scalars = {
   Boolean: boolean
   Int: number
   Float: number
-  /** The `Upload` scalar type represents a file upload. */
-  Upload: any
 }
 
 /** Representation of a value transfer between wallets, in both winson and ar. */
@@ -63,24 +62,19 @@ export type BlockEdge = {
 /** Find blocks within a given range */
 export type BlockFilter = {
   /** Maximum block height to filter to */
-  max?: Maybe<Scalars['Int']>
+  max?: InputMaybe<Scalars['Int']>
   /** Minimum block height to filter from */
-  min?: Maybe<Scalars['Int']>
+  min?: InputMaybe<Scalars['Int']>
 }
 
 /**
  * The data bundle containing the current data item.
- * See: https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md.
+ * See: https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-104.md.
  */
 export type Bundle = {
   __typename?: 'Bundle'
   /** ID of the containing data bundle. */
   id: Scalars['ID']
-}
-
-export enum CacheControlScope {
-  Private = 'PRIVATE',
-  Public = 'PUBLIC',
 }
 
 /** Basic metadata about the transaction data payload. */
@@ -127,15 +121,15 @@ export type Query = {
 }
 
 export type QueryBlockArgs = {
-  id?: Maybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']>
 }
 
 export type QueryBlocksArgs = {
-  after?: Maybe<Scalars['String']>
-  first?: Maybe<Scalars['Int']>
-  height?: Maybe<BlockFilter>
-  ids?: Maybe<Array<Scalars['ID']>>
-  sort?: Maybe<SortOrder>
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  height?: InputMaybe<BlockFilter>
+  ids?: InputMaybe<Array<Scalars['ID']>>
+  sort?: InputMaybe<SortOrder>
 }
 
 export type QueryTransactionArgs = {
@@ -143,15 +137,15 @@ export type QueryTransactionArgs = {
 }
 
 export type QueryTransactionsArgs = {
-  after?: Maybe<Scalars['String']>
-  block?: Maybe<BlockFilter>
-  bundledIn?: Maybe<Array<Scalars['ID']>>
-  first?: Maybe<Scalars['Int']>
-  ids?: Maybe<Array<Scalars['ID']>>
-  owners?: Maybe<Array<Scalars['String']>>
-  recipients?: Maybe<Array<Scalars['String']>>
-  sort?: Maybe<SortOrder>
-  tags?: Maybe<Array<TagFilter>>
+  after?: InputMaybe<Scalars['String']>
+  block?: InputMaybe<BlockFilter>
+  bundledIn?: InputMaybe<Array<Scalars['ID']>>
+  first?: InputMaybe<Scalars['Int']>
+  ids?: InputMaybe<Array<Scalars['ID']>>
+  owners?: InputMaybe<Array<Scalars['String']>>
+  recipients?: InputMaybe<Array<Scalars['String']>>
+  sort?: InputMaybe<SortOrder>
+  tags?: InputMaybe<Array<TagFilter>>
 }
 
 /** Optionally reverse the result sort order from `HEIGHT_DESC` (default) to `HEIGHT_ASC`. */
@@ -175,7 +169,7 @@ export type TagFilter = {
   /** The tag name */
   name: Scalars['String']
   /** The operator to apply to to the tag filter. Defaults to EQ (equal). */
-  op?: Maybe<TagOperator>
+  op?: InputMaybe<TagOperator>
   /**
    * An array of values to match against. If multiple values are passed then transactions with _any_ matching tag value from the set will be returned.
    *
@@ -207,7 +201,7 @@ export type Transaction = {
   block?: Maybe<Block>
   /**
    * For bundled data items this references the containing bundle ID.
-   * See: https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md
+   * See: https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-104.md
    */
   bundledIn?: Maybe<Bundle>
   data: MetaData
@@ -215,7 +209,7 @@ export type Transaction = {
   id: Scalars['ID']
   owner: Owner
   /**
-   * Transactions with parent are Bundled Data Items as defined in the ANS-102 data spec. https://github.com/ArweaveTeam/arweave-standards/blob/master/ans/ANS-102.md
+   * @deprecated Don't use, kept for backwards compatability only!
    * @deprecated Use `bundledIn`
    */
   parent?: Maybe<Parent>
@@ -249,8 +243,8 @@ export type TransactionEdge = {
 }
 
 export type ListBlocksQueryVariables = Exact<{
-  after?: Maybe<Scalars['String']>
-  first?: Maybe<Scalars['Int']>
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
 }>
 
 export type ListBlocksQuery = {
@@ -273,12 +267,12 @@ export type ListBlocksQuery = {
 }
 
 export type ListTransactionsQueryVariables = Exact<{
-  after?: Maybe<Scalars['String']>
-  first?: Maybe<Scalars['Int']>
-  blockMin?: Maybe<Scalars['Int']>
-  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>
-  owners?: Maybe<Array<Scalars['String']> | Scalars['String']>
-  recipients?: Maybe<Array<Scalars['String']> | Scalars['String']>
+  after?: InputMaybe<Scalars['String']>
+  first?: InputMaybe<Scalars['Int']>
+  blockMin?: InputMaybe<Scalars['Int']>
+  ids?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>
+  owners?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
+  recipients?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
 }>
 
 export type ListTransactionsQuery = {
@@ -293,12 +287,15 @@ export type ListTransactionsQuery = {
         __typename?: 'Transaction'
         id: string
         recipient: string
-        block?: Maybe<{ __typename?: 'Block'; height: number; id: string; timestamp: number }>
+        block?:
+          | { __typename?: 'Block'; height: number; id: string; timestamp: number }
+          | null
+          | undefined
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
         quantity: { __typename?: 'Amount'; winston: string; ar: string }
         tags: Array<{ __typename?: 'Tag'; name: string; value: string }>
-        data: { __typename?: 'MetaData'; size: string; type?: Maybe<string> }
+        data: { __typename?: 'MetaData'; size: string; type?: string | null | undefined }
       }
     }>
   }
