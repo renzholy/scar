@@ -5,7 +5,6 @@ An Arweave Explorer and Toolkit on the Permaweb.
 Available on:
 
 - https://arweave.net/KPXb-bunjcgY5uuy-vjFnwmpcsYGlP6fl84dqALqpmk
-- https://scar.argoapp.io
 - https://scar.vercel.app
 - https://scar.pages.dev
 
