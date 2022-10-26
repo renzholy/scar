@@ -1,4 +1,4 @@
-# Scar
+# ScAR
 
 An Arweave Explorer and Toolkit on the Permaweb.
 
