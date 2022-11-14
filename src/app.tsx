@@ -1,10 +1,10 @@
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { grommet, Grommet } from 'grommet'
-import Layout from './components/layout'
-import IndexPage from './pages/index'
-import BlockPage from './pages/block'
-import TransactionPage from './pages/tx'
-import AddressPage from './pages/address'
+const { default: Layout } = await import('./components/layout')
+const { default: IndexPage } = await import('./pages/index')
+const { default: BlockPage } = await import('./pages/block')
+const { default: TransactionPage } = await import('./pages/tx')
+const { default: AddressPage } = await import('./pages/address')
 
 export default function App() {
   return (
