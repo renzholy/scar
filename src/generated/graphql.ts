@@ -110,6 +110,23 @@ export type Parent = {
   id: Scalars['ID']
 }
 
+/**
+ * Arweave Gateway
+ * Copyright (C) 2022 Permanent Data Solutions, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 export type Query = {
   __typename?: 'Query'
   block?: Maybe<Block>
@@ -120,10 +137,44 @@ export type Query = {
   transactions: TransactionConnection
 }
 
+/**
+ * Arweave Gateway
+ * Copyright (C) 2022 Permanent Data Solutions, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 export type QueryBlockArgs = {
   id?: InputMaybe<Scalars['String']>
 }
 
+/**
+ * Arweave Gateway
+ * Copyright (C) 2022 Permanent Data Solutions, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 export type QueryBlocksArgs = {
   after?: InputMaybe<Scalars['String']>
   first?: InputMaybe<Scalars['Int']>
@@ -132,10 +183,44 @@ export type QueryBlocksArgs = {
   sort?: InputMaybe<SortOrder>
 }
 
+/**
+ * Arweave Gateway
+ * Copyright (C) 2022 Permanent Data Solutions, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 export type QueryTransactionArgs = {
   id: Scalars['ID']
 }
 
+/**
+ * Arweave Gateway
+ * Copyright (C) 2022 Permanent Data Solutions, Inc
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
 export type QueryTransactionsArgs = {
   after?: InputMaybe<Scalars['String']>
   block?: InputMaybe<BlockFilter>
@@ -287,15 +372,12 @@ export type ListTransactionsQuery = {
         __typename?: 'Transaction'
         id: string
         recipient: string
-        block?:
-          | { __typename?: 'Block'; height: number; id: string; timestamp: number }
-          | null
-          | undefined
+        block?: { __typename?: 'Block'; height: number; id: string; timestamp: number } | null
         owner: { __typename?: 'Owner'; address: string; key: string }
         fee: { __typename?: 'Amount'; winston: string; ar: string }
         quantity: { __typename?: 'Amount'; winston: string; ar: string }
         tags: Array<{ __typename?: 'Tag'; name: string; value: string }>
-        data: { __typename?: 'MetaData'; size: string; type?: string | null | undefined }
+        data: { __typename?: 'MetaData'; size: string; type?: string | null }
       }
     }>
   }
@@ -378,9 +460,10 @@ export const ListTransactionsDocument = gql`
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
   operationName: string,
+  operationType?: string,
 ) => Promise<T>
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action()
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) => action()
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
@@ -395,6 +478,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'listBlocks',
+        'query',
       )
     },
     listTransactions(
@@ -408,6 +492,7 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
             ...wrappedRequestHeaders,
           }),
         'listTransactions',
+        'query',
       )
     },
   }
