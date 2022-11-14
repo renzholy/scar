@@ -1,6 +1,6 @@
 import { Anchor, Box, Nav, Spinner, TextInput } from 'grommet'
 import { ReactNode, useMemo, useState } from 'react'
-import { Github, Search } from 'grommet-icons'
+import * as Icon from 'grommet-icons'
 import useSWR from 'swr'
 import compact from 'lodash/compact'
 import { useNavigate } from 'react-router'
@@ -69,7 +69,7 @@ export default function Layout(props: { children: ReactNode }) {
           <Box fill="horizontal">
             <TextInput
               size="xsmall"
-              icon={isValidating ? <Spinner /> : <Search />}
+              icon={isValidating ? <Spinner /> : <Icon.Search />}
               plain={true}
               placeholder="block, transaction or address hash"
               value={keyword}
@@ -81,7 +81,7 @@ export default function Layout(props: { children: ReactNode }) {
             />
           </Box>
           <Anchor href="https://github.com/renzholy/scar" target="_blank" style={{ lineHeight: 0 }}>
-            <Github />
+            <Icon.Github />
           </Anchor>
         </Box>
       </Nav>
